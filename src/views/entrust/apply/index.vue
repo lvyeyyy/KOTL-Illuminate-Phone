@@ -10,34 +10,53 @@
       >
         <el-card class="topCard">
           <el-form
-            ref="queryEntrustForm"
-            :model="queryEntrustForm"
-            label-width="125px"
+            ref="queryApplyForm"
+            :model="queryApplyForm"
           >
             <el-row :gutter="20">
-              <el-col :span="24">
+              <el-col :span="12">
                 <el-form-item
-                  label="受理编号"
-                  prop="SLXH"
+                  label="发文号"
+                  prop="posT_XH"
                   label-width="70px"
                 >
                   <el-input
-                    v-model="queryEntrustForm.SLXH"
-                    :value="queryEntrustForm.SLXH"
+                    v-model="queryApplyForm.posT_XH"
+                    :value="queryApplyForm.posT_XH"
                     clearable
-                    placeholder="受理编号"
+                    placeholder="发文号"
                   />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item
+                  label="申请类型"
+                  prop="classifiedType"
+                  label-width="70px"
+                >
+                  <el-select
+                    v-model="queryApplyForm.classifiedType"
+                    placeholder="请选择类型"
+                    clearable
+                  >
+                    <el-option
+                      v-for="item in optionList.typeList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
                 </el-form-item>
               </el-col>
               <el-divider />
               <el-col :span="19">
                 <el-form-item
-                  label="委托时间"
-                  prop="wtdate"
+                  label="申请时间"
+                  prop="SQDATE"
                   label-width="70px"
                 >
                   <el-date-picker
-                    v-model="queryEntrustForm.wtdate"
+                    v-model="queryApplyForm.SQDATE"
                     type="datetimerange"
                     :picker-options="pickerOptions"
                     range-separator="-"
@@ -77,50 +96,80 @@
           v-el-table-infinite-scroll="load"
           v-loading="tableLoading"
           :height="`100%`"
-          :data="entrustTableData"
+          :data="applyTableData"
           :infinite-scroll-immediate="false"
         >
           <el-table-column width="190">
             <template slot-scope="scope">
               <div style="font-size:15px;margin-bottom:5px">{{ scope.row.ajname }}</div>
-              <div style="font-size:12px;color: #9c9898;">委托时间</div>
-              <div class="timeClass">{{ scope.row.wtdate }}</div>
-              <div style="font-size:12px;color: #9c9898;margin-top:5px">委托单位</div>
-              <div class="timeClass">{{ scope.row.wtdw_name }}</div>
+              <div style="font-size:12px;color: #9c9898;">申请时间</div>
+              <div class="timeClass">{{ scope.row.sq_date }}</div>
+              <div style="font-size:12px;color: #9c9898;margin-top:5px">申请人</div>
+              <div class="timeClass">{{ scope.row.sqrname }}</div>
             </template>
           </el-table-column>
           <el-table-column>
             <template slot-scope="scope">
-              <div style="font-size:12.5px;color:#8e8b8b;margin-left:33%;width: 70%;text-align: center;">{{ scope.row.sl_year_xh }}</div>
-              <div style="width: 70%;margin-left: 35%;font-size: 12px;text-align: center;">{{ scope.row.status }}</div>
+              <div style="width: 70%;margin-left: 35%;font-size: 12px;text-align: center;">{{ formatStatus(scope.row.status) }}</div>
               <el-button
                 size="mini"
                 type="primary"
                 style="margin-left:35%"
-                @click="wtBtnClick(scope.row)"
-              >委托步骤</el-button>
+                @click="ckApply(scope.row)"
+              >查看申请
+              </el-button>
               <el-button
                 size="mini"
-                type="warning"
-                style="margin-left:35%;margin-top:5px;"
-                @click="reissue(scope.row)"
-              >遗失补发</el-button>
+                type="success"
+                style="margin-left:35%"
+                @click="finishApply(scope.row)"
+              >{{ scope.row.status==='4'?'已完成':'完成' }}
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-card>
     </el-row>
     <el-dialog
-      v-if="dialogReissueVisible"
-      title="遗失补发鉴定文书"
-      :visible.sync="dialogReissueVisible"
-      width="90%"
-      style="padding:5px 10px;"
-      :close-on-click-modal="false"
+      v-if="dialogEditJDWSVisible"
+      title="申请修改鉴定文书"
+      :visible.sync="dialogEditJDWSVisible"
+      append-to-body
+      width="75%"
+      destroy-on-close
     >
-      <ReissueJDWS
+      <editJDWS
         :row="row"
-        :reissue-success-call-back="reissueSuccessCallBack"
+        :is-examine="isExamine"
+        :is-edit="true"
+        :iswt="true"
+        :edit-success-call-back="editSuccessCallBack"
+      />
+    </el-dialog>
+    <el-dialog
+      v-if="dialogFinshJDWSVisible"
+      title="完成修改鉴定文书申请"
+      :visible.sync="dialogFinshJDWSVisible"
+      append-to-body
+      width="75%"
+      destroy-on-close
+    >
+      <finishEditJDWS
+        :row="row"
+        :finish-edit-success-call-back="finishEditSuccessCallBack"
+      />
+    </el-dialog>
+    <el-dialog
+      v-if="dialogFinshJDWSVisible2"
+      title="完成补发鉴定文书申请"
+      :visible.sync="dialogFinshJDWSVisible2"
+      append-to-body
+      width="75%"
+      destroy-on-close
+    >
+      <finishReissueJDWS
+        :row="row"
+        :finish-reissue-success-call-back="finishReissueSuccessCallBack"
       />
     </el-dialog>
   </div>
@@ -132,150 +181,140 @@ function clientGetToken() {
   return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdnllIiwianRpIjoiMDBlYTRhM2YtZjg1OC00YTdkLWIzMWItNTQyMmRlZTk4YWJkIiwiaWF0IjoiMjAyMi8xMC8yNiAxNDoyMDo0OSIsIm5hbWVpZCI6IjczOCIsIm5iZiI6MTY2Njc2NTI0OSwiZXhwIjoxNjY2NzY3MDQ5LCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.2HPRNNG-NBqLzzPBGKG0O2Xqwzdb3LkQimLUzDfAw0o'
 }
 import { datePeriodPickerOptions } from '@/utils/tool'
-import { getEntrustList } from '@/api/entrust'
+import { acquiremodifyword } from '@/api/word'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
-import ReissueJDWS from './reissueJDWS.vue'
+import editJDWS from './components/editJDWS.vue'
+import finishEditJDWS from './components/finish.vue'
+import finishReissueJDWS from './components/finish2.vue'
 
 export default {
-  components: { ReissueJDWS },
+  components: { editJDWS, finishEditJDWS, finishReissueJDWS },
   directives: {
     'el-table-infinite-scroll': elTableInfiniteScroll
   },
   data() {
     return {
-      dialogReissueVisible: false,
-      queryEntrustForm: {
-        // 委托编号
-        wtbh: '',
-        // 受理序号
-        SLXH: '',
-        // 委托鉴定单位
-        wtdw: '',
-        // 检验状态
-        INSPECTSTATUS: '',
-        // 委托人
-        wt_operdm: '',
-        // 委托时间
-        wtdate: [],
-        // 案件名称
-        ajname: '',
-        // 鉴定专业
-        identificationType: '',
-        // 鉴定类别
-        jdlb: '',
-        // 鉴定专业
-        jdzy: '',
-        // 鉴定子类别
-        jdzlb: '',
-        // 受理人
-        sl_operdm: '',
-        // 鉴定人
-        sl_jdr: '',
-        // 受理时间
-        sldate: [],
-        // 预审核状态
-        preAuditStatus: '',
-        // 委托方领导审核状态
-        wtAuditStatus: '',
-        // 受理状态
-        acceptStatus: '',
-        // 检验状态
-        // inspectStatus: '',
-        // 审核状态
-        auditStatus: '',
-        // 发文状态
-        postStatus: '',
-        // 授权签字人（复核人）
-        authPerson: '',
-        // 一审人
-        firstAuditor: '',
-        // 二审人
-        secondAuditor: '',
-        // 三审人
-        thirdAuditor: '',
-        // 四审人
-        forthAuditor: '',
-        // 审核步骤
-        auditStep: '',
-        // 分页参数
+      queryApplyForm: {
+        // 申请人
+        sqr: this.$store.state.user.operdm,
+        // 发文号
+        posT_XH: '',
+        // 申请时间
+        SQDATE: [],
+        // 申请类型
+        classifiedType: '1',
         // 每页条数
         pageSize: 10,
         // 当前页数
         pageIndex: 1,
-        // 排序字段
-        sortName: 'wtdate',
-        // 正序倒序
-        sortOrder: 'desc',
-        // 是否出具告知单
-        issueNotice: NaN,
-        // 是否出具检验报告
-        issueReport: NaN,
-        // 检材受理状态
-        jcyB_SL_STATE: '',
-        // 被鉴定人
-        bjdrname: ''
+        status: '3,4'
       },
-      entrustTableData: [],
+      applyTableData: [],
       tableLoading: false,
       pickerOptions: datePeriodPickerOptions,
       totalPage: 0,
-      row: undefined
+      row: undefined,
+      optionList: {
+        entrustPeopleOption: [],
+        typeList: [{
+          value: '1',
+          label: '鉴定文书修改'
+        }, {
+          value: '2',
+          label: '补发申请'
+        }
+        ]
+      },
+      isExamine: false,
+      dialogEditJDWSVisible: false,
+      dialogUpdateJDWSVisible: false,
+      dialogFinshJDWSVisible: false,
+      dialogFinshJDWSVisible2: false
     }
   },
   created() {
     this.tokentest = clientGetToken()
     var tokentest = this.tokentest
     this.$store.commit('user/SET_TOKEN2', tokentest)
-    this.getEntrustList()
+    this.getApplyList()
   },
   methods: {
-    // 补发
-    reissue: function (row) {
+    // 查看
+    ckApply: function (row) {
       this.row = row
-      this.dialogReissueVisible = true
-      // if (row.wt_operdm_one === this.$store.state.user.operdm || row.wt_operdm_two === this.$store.state.user.operdm) {
-      //   this.row = row
-      //   this.dialogReissueVisible = true
-      // } else {
-      //   this.$message.info('您不是该案件的委托人，无权提交补发申请！')
-      // }
+      this.isExamine = false
+      if (row.classifiedtype === '1') {
+        this.dialogEditJDWSVisible = true
+      }
     },
-    reissueSuccessCallBack() {
-      this.dialogReissueVisible = false
+    finishApply: function (row) {
+      this.row = row
+      if (row.classifiedtype === '1') {
+        this.dialogFinshJDWSVisible = true
+      } else {
+        this.dialogFinshJDWSVisible2 = true
+      }
+    },
+    editSuccessCallBack() {
+      this.dialogEditJDWSVisible = false
+      this.getApplyList()
+    },
+    updateSuccessCallBack() {
+      this.dialogUpdateJDWSVisible = false
+      this.getApplyList()
+    },
+    finishEditSuccessCallBack() {
+      this.dialogFinshJDWSVisible = false
+      this.getApplyList()
+    },
+    finishReissueSuccessCallBack() {
+      this.dialogFinshJDWSVisible2 = false
+      this.getApplyList()
     },
     // 点击选择日期不调用输入法
     elDatePickerOnFocus() {
       document.activeElement.blur()
     },
-    // 获取委托表格数据
-    getEntrustList() {
+    // 获取表格数据
+    getApplyList() {
       this.tableLoading = true
-      getEntrustList(this.queryEntrustForm).then(response => {
+      acquiremodifyword(this.queryApplyForm).then(response => {
         // console.log('11', response.data)
-        this.entrustTableData = this.entrustTableData.concat(response.data.rows)
+        this.applyTableData = this.applyTableData.concat(response.data.rows)
         this.totalPage = Math.ceil(response.data.total / 10)
         this.tableLoading = false
       })
     },
+    // 格式化状态
+    formatStatus(cellValue) {
+      if (cellValue === '0') {
+        return '待委托方领导审核'
+      } else if (cellValue === '1') {
+        return '委托方领导已审核'
+      } else if (cellValue === '2') {
+        return '鉴定中心授权人确认'
+      } else if (cellValue === '3') {
+        return '鉴定中心领导已审核'
+      } else if (cellValue === '4') {
+        return '检验人完成'
+      } else {
+        return '未知状态'
+      }
+    },
     // 划到底部加载下一页数据
     load() {
-      if (this.queryEntrustForm.pageIndex < this.totalPage) {
-        this.queryEntrustForm.pageIndex = this.queryEntrustForm.pageIndex + 1
-        this.getEntrustList()
-      } else if (this.queryEntrustForm.pageIndex === this.totalPage && this.totalPage !== 1) {
+      if (this.queryApplyForm.pageIndex < this.totalPage) {
+        this.queryApplyForm.pageIndex = this.queryApplyForm.pageIndex + 1
+        this.getApplyList()
+      } else if (this.queryApplyForm.pageIndex === this.totalPage && this.totalPage !== 1) {
         this.$message.info('已经到底了~')
       }
     },
     // 查询表格数据
     query() {
-      this.queryEntrustForm.pageIndex = 1
-      this.entrustTableData = []
-      this.getEntrustList()
-    },
-    wtBtnClick(row) {
-      console.log('111', row)
-      //  跳到案件信息页面 传ajid
-      //   this.$router.push('/entrust/submit/' + row.ajid + '/' + row.wtid + '/' + row.jdzy + '/1')
+      this.queryApplyForm.pageIndex = 1
+      this.applyTableData = []
+      this.getApplyList()
     }
   }
 }
