@@ -326,10 +326,10 @@
 </template>
 
 <script>
-import { add_modifyword, update_modifyword } from '../../api/word'
-import { getAllUnitSelectOption } from '../../api/selectOption'
-import Signature from '../../components/Signature/PhoneIndex.vue'
-import { uploadImage } from '../../api/entrust'
+import { add_modifyword, update_modifyword } from '@/api/word'
+import { getAllUnitSelectOption } from '@/api/selectOption'
+import Signature from '@/components/Signature/PhoneIndex.vue'
+import { uploadImage } from '@/api/entrust'
 
 export default {
   components: { Signature },

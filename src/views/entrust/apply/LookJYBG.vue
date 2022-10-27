@@ -72,7 +72,7 @@ import Pdfh5 from 'pdfh5'
 import 'pdfh5/css/pdfh5.css'
 import { queryDocument, uploadImage, updatelq } from '@/api/entrust'
 import Signature from '@/components/Signature/PhoneIndex'
-import editJDWS from './editJDWS.vue'
+import editJDWS from './components/editJDWS.vue'
 
 export default {
   components: { Signature, editJDWS },

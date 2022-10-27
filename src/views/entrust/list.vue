@@ -152,13 +152,13 @@
 <script>
 function clientGetToken() {
   //   return client.getToken()
-  return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdnllIiwianRpIjoiMDBlYTRhM2YtZjg1OC00YTdkLWIzMWItNTQyMmRlZTk4YWJkIiwiaWF0IjoiMjAyMi8xMC8yNiAxNDoyMDo0OSIsIm5hbWVpZCI6IjczOCIsIm5iZiI6MTY2Njc2NTI0OSwiZXhwIjoxNjY2NzY3MDQ5LCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.2HPRNNG-NBqLzzPBGKG0O2Xqwzdb3LkQimLUzDfAw0o'
+  return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdnllIiwianRpIjoiMWNlOTBlMmEtNjEwZi00MTI1LWIwZTMtZDM4N2RjZDM3NDhlIiwiaWF0IjoiMjAyMi8xMC8yNyA5OjA5OjIwIiwibmFtZWlkIjoiNzM4IiwibmJmIjoxNjY2ODMyOTYwLCJleHAiOjE2NjY4MzQ3NjAsImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.37GXPGibZAnlIqh_AkQIGC6CuiUlyn2Eufcj0n2nq7c'
 }
 import { datePeriodPickerOptions } from '@/utils/tool'
 import { getEntrustList } from '@/api/entrust'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
-import ReissueJDWS from './reissueJDWS.vue'
-import LookJYBG from '../entrust/LookJYBG.vue'
+import ReissueJDWS from './apply/reissueJDWS.vue'
+import LookJYBG from './apply/LookJYBG.vue'
 
 export default {
   components: { ReissueJDWS, LookJYBG },
