@@ -263,3 +263,14 @@ export function addSample(data) {
     data
   })
 }
+/**
+ * 委托人领取打印签字
+ * @returns {Promise}
+ */
+export function updatelq(data) {
+    return request({
+        url: '/wthandler/updatelq',
+        method: 'post',
+        data
+    })
+}

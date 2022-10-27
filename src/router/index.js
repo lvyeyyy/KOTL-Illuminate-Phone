@@ -99,6 +99,11 @@ export const constantRoutes = [
     name: 'identification-apply-list',
     component: () => import('../views/entrust/apply/index'),
     meta: { title: '文书申请列表', icon: 'audit' }
+  }, {
+    path: '/jdws-apply/list',
+    name: 'jdws-apply-list',
+    component: () => import('../views/entrust/applylist'),
+    meta: { title: '鉴定文书申请列表', icon: 'audit' }
   }
   // {
   //   path: '/entrust/ajinfo',

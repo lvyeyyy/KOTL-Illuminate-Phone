@@ -19,6 +19,8 @@ const getters = {
   // 检验方预审核状态
   PRE_AUDIT_STATUS: state => state.constants.PRE_AUDIT_STATUS,
   // 受理状态
-  ACCEPT_STATUS: state => state.constants.ACCEPT_STATUS
+  ACCEPT_STATUS: state => state.constants.ACCEPT_STATUS,
+  // 发文状态
+  POST_STATUS: state => state.constants.POST_STATUS
 }
 export default getters

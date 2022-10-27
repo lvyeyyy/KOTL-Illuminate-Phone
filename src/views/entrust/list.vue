@@ -101,6 +101,13 @@
               >委托步骤</el-button>
               <el-button
                 size="mini"
+                style="margin-left:35%;margin-top:3px"
+                :disabled="getPrintDisabled(scope.row)"
+                :type="getPrintStatus(scope.row)"
+                @click="print(scope.row)"
+              >查看文书</el-button>
+              <el-button
+                size="mini"
                 type="warning"
                 style="margin-left:35%;margin-top:5px;"
                 @click="reissue(scope.row)"
@@ -123,6 +130,22 @@
         :reissue-success-call-back="reissueSuccessCallBack"
       />
     </el-dialog>
+    <el-dialog
+      v-if="dialogPrintVisible"
+      title="查看鉴定文书"
+      :visible.sync="dialogPrintVisible"
+      width="98%"
+      class="DialogStyle"
+      top="10px"
+      :close-on-click-modal="false"
+    >
+      <LookJYBG
+        :row="row"
+        :entrust-id="entrustId"
+        :jdzy-id="rowJDZY"
+        :lq-status="rowLqStatus"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -135,9 +158,10 @@ import { datePeriodPickerOptions } from '@/utils/tool'
 import { getEntrustList } from '@/api/entrust'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
 import ReissueJDWS from './reissueJDWS.vue'
+import LookJYBG from '../entrust/LookJYBG.vue'
 
 export default {
-  components: { ReissueJDWS },
+  components: { ReissueJDWS, LookJYBG },
   directives: {
     'el-table-infinite-scroll': elTableInfiniteScroll
   },
@@ -219,7 +243,11 @@ export default {
       tableLoading: false,
       pickerOptions: datePeriodPickerOptions,
       totalPage: 0,
-      row: undefined
+      entrustId: '',
+      rowJDZY: '',
+      rowLqStatus: '',
+      row: undefined,
+      dialogPrintVisible: false
     }
   },
   created() {
@@ -272,6 +300,32 @@ export default {
       this.entrustTableData = []
       this.getEntrustList()
     },
+    getPrintDisabled(row) {
+      return row.poststatus !== this.$store.getters.POST_STATUS.PASSED
+    },
+    getPrintStatus(row) {
+      if (row.lq_status === '0') {
+        if (row.poststatus === this.$store.getters.POST_STATUS.PENDING) {
+          return 'info'
+        } else {
+          return 'success'
+        }
+      } else {
+        return 'danger'
+      }
+    },
+    print(row) {
+      // console.log('row.wt_operdm_one', this.$store.state.user.operdm)
+      // if (row.wt_operdm_one === this.$store.state.user.operdm || row.wt_operdm_two === this.$store.state.user.operdm) {
+      this.entrustId = row.wtid
+      this.rowJDZY = row.jdzy
+      this.rowLqStatus = row.lq_status
+      this.row = row
+      this.dialogPrintVisible = true
+      // } else {
+      //   this.$message.info('您不是该案件的委托人，无权查看！')
+      // }
+    },
     wtBtnClick(row) {
       console.log('111', row)
       //  跳到案件信息页面 传ajid
@@ -307,6 +361,9 @@ export default {
   width: 0 !important;
 }
 ::v-deep .topCard .el-card__body {
+  padding-top: 0;
+}
+::v-deep .DialogStyle > .el-dialog .el-dialog__body {
   padding-top: 0;
 }
 ::v-deep .topCard {

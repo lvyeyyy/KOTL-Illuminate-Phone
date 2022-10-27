@@ -128,6 +128,17 @@ const state = {
     PENDING: 0,
     // 受理成功
     PASSED: 1
+  },
+  /**
+   * 发文状态
+   */
+  POST_STATUS: {
+    // 不予发文
+    FAILED: -1,
+    // 待发文
+    PENDING: 0,
+    // 已经发文
+    PASSED: 1
   }
 }
 
