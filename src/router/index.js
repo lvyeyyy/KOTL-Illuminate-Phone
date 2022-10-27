@@ -92,7 +92,12 @@ export const constantRoutes = [
     path: '/entrust/wtinfolist',
     name: 'entrust-wtinfolist',
     component: () => import('../views/entrust/list'),
-    meta: { title: '委托列表', icon: 'audit' }
+    meta: { title: '委托送检列表', icon: 'audit' }
+  }, {
+    path: '/jdws-apply/list',
+    name: 'jdws-apply-list',
+    component: () => import('../views/entrust/applylist'),
+    meta: { title: '鉴定文书申请列表', icon: 'audit' }
   }
   // {
   //   path: '/entrust/ajinfo',

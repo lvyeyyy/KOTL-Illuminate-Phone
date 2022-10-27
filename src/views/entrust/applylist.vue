@@ -1,0 +1,375 @@
+<template>
+  <div style="height:100%">
+    <el-row
+      :gutter="20"
+      style="width:100%"
+    >
+      <el-col
+        :span="24"
+        style="padding:0;margin-bottom:5px"
+      >
+        <el-card class="topCard">
+          <el-form
+            ref="queryApplyForm"
+            :model="queryApplyForm"
+            label-width="125px"
+          >
+            <el-row :gutter="20">
+              <el-col :span="24">
+                <el-form-item
+                  label="申请类型"
+                  prop="classifiedType"
+                  label-width="70px"
+                >
+                  <el-select
+                    v-model="queryApplyForm.classifiedType"
+                    placeholder="请选择类型"
+                    clearable
+                  >
+                    <el-option
+                      v-for="item in optionList.typeList"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-divider />
+              <el-col :span="19">
+                <el-form-item
+                  label="申请时间"
+                  prop="SQDATE"
+                  label-width="70px"
+                >
+                  <el-date-picker
+                    v-model="queryApplyForm.SQDATE"
+                    type="datetimerange"
+                    :picker-options="pickerOptions"
+                    range-separator="-"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    align="center"
+                    size="mini"
+                    style="width: 100%"
+                    @focus="elDatePickerOnFocus"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col
+                :span="5"
+                style="margin-top:3%"
+              >
+                <el-button
+                  plain
+                  size="mini"
+                  type="primary"
+                >查询
+                </el-button>
+              </el-col>
+              <el-divider />
+            </el-row>
+          </el-form>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row
+      :gutter="20"
+      style="margin:110px 0 0 0;height:calc(100% - 115px)"
+    >
+      <el-card class="my-card">
+        <el-table
+          v-el-table-infinite-scroll="load"
+          v-loading="tableLoading"
+          :height="`100%`"
+          :data="applyTableData"
+          :infinite-scroll-immediate="false"
+        >
+          <el-table-column width="180">
+            <template slot-scope="scope">
+              <div style="font-size:15px;margin-bottom:5px">{{ scope.row.ajname }}</div>
+              <div style="font-size:12px;color: #9c9898;margin-top:-5px">申请时间</div>
+              <div class="timeClass">{{ scope.row.sq_date }}</div>
+              <div style="font-size:12px;color: #9c9898;">状态</div>
+              <div class="timeClass">{{ formatStatus(scope.row.status) }}</div>
+            </template>
+          </el-table-column>
+          <el-table-column>
+            <template slot-scope="scope">
+              <div class="rightInfo">申请人&nbsp;{{ scope.row.sqrname }}</div>
+              <el-row style="width:126%;text-align:center">
+                <el-button
+                  size="mini"
+                  :type="scope.row.status==='3'?'success':'primary'"
+                >{{ scope.row.status==='3'?'已完成':"待审核" }}
+                </el-button>
+              </el-row>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-card>
+    </el-row>
+    <el-dialog
+      title="案件检验结果"
+      :visible.sync="resultDialog"
+      width="94%"
+      append-to-body
+      destroy-on-close
+      :lock-scroll="false"
+    >
+      <el-input
+        v-model="jyconclusion"
+        type="textarea"
+        autosize
+        placeholder="检验结论"
+      />
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+function clientGetToken() {
+  //   return client.getToken()
+  return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiODhhODQ5ZjktNjMwYi00YzEwLTljMjAtYThkZDhhNDNkYTU4IiwiaWF0IjoiMjAyMi8xMC8yNiAxNDoyNTo0MyIsIm5hbWVpZCI6Ijc3NiIsIm5iZiI6MTY2Njc2NTU0MywiZXhwIjoxNjY2NzY3MzQzLCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.xKMreCSTipw_PdcyG19VUY-bXW60FWzNwc1Q6FQwdIU'
+}
+// function clientGetOjdzy() {
+//   return client.getJdzy()
+//   // return '2'
+// }
+
+import { datePeriodPickerOptions } from '@/utils/tool'
+import elTableInfiniteScroll from 'el-table-infinite-scroll'
+import { acquiremodifyword } from '@/api/word'
+
+export default {
+  directives: {
+    'el-table-infinite-scroll': elTableInfiniteScroll
+  },
+  data() {
+    return {
+      applyTableData: [],
+      tableLoading: false,
+      totalPage: 0,
+      queryApplyForm: {
+        // 申请人
+        sqr: this.$store.state.user.operdm,
+        // 发文号
+        posT_XH: '',
+        // 申请时间
+        SQDATE: [],
+        // 申请类型
+        classifiedType: '',
+        // 每页条数
+        pageSize: 10,
+        // 当前页数
+        pageIndex: 1,
+        status: '1,2,3'
+      },
+      optionList: {
+        entrustPeopleOption: [],
+        typeList: [{
+          value: '1',
+          label: '鉴定文书修改'
+        }, {
+          value: '2',
+          label: '补发申请'
+        }
+        ]
+      },
+      pickerOptions: datePeriodPickerOptions,
+      resultDialog: false,
+      jyconclusion: ''
+    }
+  },
+  created() {
+    this.tokentest = clientGetToken()
+    var tokentest = this.tokentest
+    this.$store.commit('user/SET_TOKEN2', tokentest)
+    // this.queryEntrustForm.jdzy = clientGetOjdzy()
+    // if (this.queryEntrustForm.jdzy === this.$store.getters.MAJOR_TYPE.DNA) {
+    //   this.queryEntrustForm.INSPECTSTATUS = '2'
+    // }
+    this.getApplyList()
+  },
+  methods: {
+    // 获取委托表格数据
+    getApplyList() {
+      this.tableLoading = true
+      acquiremodifyword(this.queryApplyForm).then(response => {
+        this.applyTableData = this.applyTableData.concat(response.data.rows)
+        console.log(response.data)
+        // this.totalPage = Math.ceil(response.data.total / 10)
+        this.tableLoading = false
+      })
+    },
+    // 格式化状态
+    formatStatus(status) {
+      if (status === '0') {
+        return '待委托方领导审核'
+      } else if (status === '1') {
+        return '委托方领导已审核'
+      } else if (status === '2') {
+        return '鉴定中心授权人确认'
+      } else if (status === '3') {
+        return '鉴定中心领导已审核'
+      } else if (status === '4') {
+        return '检验人完成'
+      } else {
+        return '未知状态'
+      }
+    },
+    // 划到底部加载下一页数据
+    load() {
+      if (this.queryApplyForm.pageIndex < this.totalPage) {
+        this.queryApplyForm.pageIndex = this.queryApplyForm.pageIndex + 1
+        this.getApplyList()
+      } else if (this.queryApplyForm.pageIndex === this.totalPage && this.totalPage !== 1) {
+        this.$message.info('已经到底了~')
+      }
+    },
+    //     // 查询表格数据
+    //     query() {
+    //       this.queryEntrustForm.pageIndex = 1
+    //       this.applyTableData = []
+    //       this.getApplyList()
+    //     },
+    // 点击选择日期不调用输入法
+    elDatePickerOnFocus() {
+      document.activeElement.blur()
+    }
+    //     rowClick(row) {
+    //       if (this.queryEntrustForm.jdzy === this.$store.getters.MAJOR_TYPE.LH) {
+    //         // 点击行跳转到该委托ID下的检材列表，传鉴定专业和委托ID
+    //         client.lookjcList(row.jdzy, row.wtid)
+    //         // this.$router.push({ path: '/samplelist', query: { jdzyId: row.jdzy, entrustId: row.wtid } })
+    //       } else if (this.queryEntrustForm.jdzy === this.$store.getters.MAJOR_TYPE.DNA) {
+    //         acquireFinallyConclusion(row.wtid).then(res => {
+    //           if (res.data.conclusion) {
+    //             this.resultDialog = true
+    //             this.jyconclusion = res.data.conclusion
+    //           } else {
+    //             this.$message.info('该案件暂未提交检验结果！')
+    //           }
+    //         })
+    //       }
+    //     }
+  }
+}
+</script>
+
+<style scoped lang="scss">
+::v-deep .el-select {
+  width: 100%;
+}
+::v-deep .el-table__header-wrapper {
+  display: none;
+}
+::v-deep .el-table__body-wrapper {
+  overflow-y: scroll !important;
+}
+.timeClass {
+  font-size: 13px;
+  color: #6e6c6c;
+  line-height: 1;
+}
+::v-deep .el-table td {
+  padding: 15px 0;
+}
+.auditBtn {
+  margin-left: 36%;
+  padding: 5px 8px;
+  font-size: 14px;
+  width: 62%;
+  text-align: center;
+}
+::v-deep .el-table__body-wrapper::-webkit-scrollbar {
+  width: 0 !important;
+}
+::v-deep .topCard .el-card__body {
+  padding-top: 0;
+}
+::v-deep .topCard {
+  position: fixed;
+  z-index: 1;
+}
+::v-deep .my-card .el-card__body {
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 100%;
+}
+.my-card {
+  height: 100%;
+}
+::v-deep .el-form-item__label {
+  font-size: 13px;
+  font-weight: normal;
+  color: #9c9898;
+}
+::v-deep .el-input__inner {
+  border: none;
+  padding: 0 !important;
+  text-align: left;
+  font-size: 12px;
+}
+::v-deep .el-form-item {
+  margin-bottom: 0;
+  padding: 1% 0 0 1%;
+}
+::v-deep .el-divider--horizontal {
+  margin: 12% 0 0 4%;
+  background-color: #eee;
+  width: 93%;
+}
+.rightInfo {
+  font-size: 12.5px;
+  color: #85aaf1;
+  width: 126%;
+  text-align: center;
+}
+::v-deep .el-dialog__title {
+  font-size: 16px;
+}
+::v-deep .el-dialog__header {
+  padding: 10px 20px 10px;
+}
+::v-deep .el-dialog__body {
+  padding: 20px;
+}
+::v-deep .el-dialog__headerbtn {
+  top: 2%;
+  font-size: 23px;
+}
+</style>
+<style lang="scss">
+.el-picker-panel {
+  line-height: 1;
+  width: 100% !important;
+  left: 0;
+  font-size: 12px;
+}
+.el-input--small {
+  font-size: 12px !important;
+}
+.el-date-range-picker__header div {
+  font-size: 13px !important;
+  margin-left: 19px !important;
+  margin-right: 0 !important;
+}
+.el-picker-panel__icon-btn {
+  width: 8px;
+  height: 10px;
+}
+.el-picker-panel__body {
+  margin: 0 !important;
+  min-width: 0 !important;
+}
+.el-picker-panel__sidebar {
+  display: none;
+}
+.el-picker-panel__shortcut {
+  padding: 0;
+}
+.el-date-table td {
+  padding: 0 !important;
+}
+</style>
