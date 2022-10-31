@@ -44,6 +44,7 @@
       <Signature
         v-if="dialogSignatureVisible"
         :jdzy-id="jdzyId"
+        :signpicture="signpicture"
         @on-save="uploadEntrustSignatureImage"
         @on-picture="uploadPicture"
       />
@@ -61,6 +62,10 @@
         :is-edit="false"
         :iswt="true"
         :is-examine="false"
+        :operdm="operdm"
+        :username="username"
+        :signpicture="signpicture"
+        :signpictureid="signpictureid"
         :edit-success-call-back="editSuccessCallBack"
       />
     </el-dialog>
@@ -80,7 +85,11 @@ export default {
     entrustId: { type: String, require: true, default: undefined },
     jdzyId: { type: String, require: true, default: undefined },
     lqStatus: { type: String, require: true, default: undefined },
-    row: { type: Object, require: true, default: undefined }
+    row: { type: Object, require: true, default: undefined },
+    operdm: { type: String, require: true, default: '' },
+    username: { type: String, require: true, default: '' },
+    signpicture: { type: String, default: '' },
+    signpictureid: { type: String, default: '' }
   },
   data() {
     return {
@@ -143,11 +152,11 @@ export default {
     },
     // 使用个人中心的签字图片
     uploadPicture() {
-      if (this.$store.state.user.signatureid !== undefined) {
+      if (this.signpictureid !== undefined) {
         const temp = {
           wtid: this.entrustId,
           lQ_STATUS: '1',
-          LQ_SIGNNAME: this.$store.state.user.signatureid
+          LQ_SIGNNAME: this.signpictureid
         }
         updatelq(temp).then(response => {
           this.$message.success('领取成功，请打印！')
@@ -169,6 +178,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .el-form-item__label {
+  font-size: 13px;
+}
 ::v-deep .el-dialog .el-dialog__title {
   font-size: 15px;
 }
@@ -177,7 +189,10 @@ export default {
 }
 ::v-deep .el-dialog__headerbtn {
   font-size: 22px;
-  top: 17px;
+  top: 2%;
+}
+::v-deep .el-dialog__header {
+  padding: 10px 20px 10px;
 }
 </style>
 <style>

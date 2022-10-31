@@ -58,52 +58,29 @@ export const constantRoutes = [
     component: () => import('../views/preAudit/index'),
     meta: { title: '确认案件信息', icon: 'audit' }
   },
-  // {
-  //   path: '/preaudit/ajinfotemp',
-  //   name: 'preaudit-ajinfotemp',
-  //   component: () => import('../views/preAudit/caseInfo'),
-  //   meta: { title: '确认案件信息', icon: 'audit' }
-  // },
-  // {
-  //   path: '/preaudit/wtinfo',
-  //   name: 'preaudit-wtinfo',
-  //   component: () => import('../views/preAudit/entrustInfo'),
-  //   meta: { title: '确认委托信息', icon: 'audit' }
-  // },
-  // {
-  //   path: '/preaudit/bdjrinfo',
-  //   name: 'preaudit-wtinfo',
-  //   component: () => import('../views/preAudit/bdjrInfo'),
-  //   meta: { title: '确认被鉴定人信息', icon: 'audit' }
-  // },
-  // {
-  //   path: '/preaudit/jcinfo',
-  //   name: 'preaudit-jcinfo',
-  //   component: () => import('../views/preAudit/jcInfo'),
-  //   meta: { title: '确认检材信息', icon: 'audit' }
-  // },
-  // {
-  //   path: '/preaudit/auditinfo',
-  //   name: 'preaudit-auditinfo',
-  //   component: () => import('../views/preAudit/auditInfo'),
-  //   meta: { title: '审核信息', icon: 'audit' }
-  // },
   {
     path: '/entrust/wtinfolist',
     name: 'entrust-wtinfolist',
     component: () => import('../views/entrust/list'),
-    meta: { title: '委托列表', icon: 'audit' }
+    meta: { title: '委托送检列表', icon: 'audit' }
+  },
+  {
+    path: '/look-apply/list',
+    name: 'look-apply-list',
+    component: () => import('../views/entrust/apply/lookapplylist'),
+    meta: { title: '补发/修改', icon: 'audit' }
   },
   {
     path: '/identification/apply/list',
     name: 'identification-apply-list',
     component: () => import('../views/entrust/apply/index'),
-    meta: { title: '文书申请列表', icon: 'audit' }
-  }, {
+    meta: { title: '补发/修改操作列表', icon: 'audit' }
+  },
+  {
     path: '/jdws-apply/list',
     name: 'jdws-apply-list',
     component: () => import('../views/entrust/applylist'),
-    meta: { title: '鉴定文书申请列表', icon: 'audit' }
+    meta: { title: '补发/修改申请列表', icon: 'audit' }
   }
   // {
   //   path: '/entrust/ajinfo',

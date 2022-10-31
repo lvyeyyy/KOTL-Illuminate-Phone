@@ -5,15 +5,10 @@
       :model="reissueJDWSForm"
       :rules="editJDWSRules"
       label-width="80px"
+      size="mini"
     >
       <el-row>
-        <el-col
-          :xs="24"
-          :sm="24"
-          :md="24"
-          :lg="8"
-          :xl="8"
-        >
+        <el-col :span="24">
           <el-form-item
             label="申请单位"
             prop="sqdw"
@@ -30,18 +25,12 @@
               clearable
             >
               <template slot-scope="{ node, data }">
-                <span style="width:85%;font-size:15px;">{{ data.xzdmc }}</span>
+                <span>{{ data.xzdmc }}</span>
               </template>
             </el-cascader>
           </el-form-item>
         </el-col>
-        <el-col
-          :xs="24"
-          :sm="24"
-          :md="24"
-          :lg="8"
-          :xl="8"
-        >
+        <el-col :span="24">
           <el-form-item
             label="申请人员"
             prop="sqr_name"
@@ -55,19 +44,14 @@
             />
           </el-form-item>
         </el-col>
-        <el-col
-          :xs="24"
-          :sm="24"
-          :md="24"
-          :lg="8"
-          :xl="8"
-        >
+        <el-col :span="24">
           <el-form-item
             label="申请时间"
             prop="sQ_DATE"
           >
             <el-date-picker
               v-model="reissueJDWSForm.sQ_DATE"
+              style="width:100%"
               disabled
               :value="reissueJDWSForm.sQ_DATE"
               type="date"
@@ -76,13 +60,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col
-          :xs="24"
-          :sm="24"
-          :md="24"
-          :lg="12"
-          :xl="12"
-        >
+        <el-col :span="24">
           <el-form-item
             label="文书名称"
             prop="jdwsmc"
@@ -95,13 +73,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col
-          :xs="24"
-          :sm="24"
-          :md="24"
-          :lg="12"
-          :xl="12"
-        >
+        <el-col :span="24">
           <el-form-item
             label="文书编号"
             prop="jdwsbh"
@@ -125,7 +97,7 @@
               clearable
               placeholder="请输入申请事由"
             />
-            <div>
+            <div class="tipStyle">
               <span>本单位已经收到由浙江省东阳市公安司法鉴定中心签发的</span>
               <span
                 v-if="reissueJDWSForm.sqsy==='' "
@@ -160,33 +132,43 @@
         :gutter="20"
       >
         <el-divider />
-        <el-col :span="16">
-          <el-form-item label="申请单位意见">
+        <el-col :span="24">
+          <el-form-item
+            label="申请单位意见"
+            label-width="92px"
+          >
             <el-input
               v-model="reissueJDWSForm.sqdwyj"
               type="textarea"
-              :rows="4"
+              :rows="3"
               :value="reissueJDWSForm.sqdwyj"
               clearable
               placeholder="请输入申请单位意见"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="10"
+          style="margin-top:8px"
+        >
           <el-button
             type="primary"
             plain
+            size="mini"
             icon="el-icon-edit"
             @click="dialogSignatureVisible=true"
           >审核签名
           </el-button>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="5"
+          style="margin-top:8px"
+        >
           <el-image :src="reissueJDWSForm.sqdwyJ_QZ_url">
             <div
               slot="error"
               class="image-slot"
-              style="display: flex;    justify-content: center;    align-items: center;"
+              style="display: flex;justify-content: center;align-items: center;font-size:13px"
             >
               未签名
             </div>
@@ -194,11 +176,12 @@
         </el-col>
         <el-col
           v-if="row.status==='0' || !iswt"
-          :span="4"
-          :offset="20"
+          :span="9"
+          style="margin-top:8px"
         >
           <el-button
             type="success"
+            size="mini"
             @click="adopt"
           >
             通过
@@ -210,33 +193,40 @@
         :gutter="20"
       >
         <el-divider />
-        <el-col :span="16">
+        <el-col :span="24">
           <el-form-item label="室负责人意见">
             <el-input
               v-model="reissueJDWSForm.szryj"
               type="textarea"
-              :rows="4"
+              :rows="3"
               :value="reissueJDWSForm.szryj"
               clearable
               placeholder="请输入室负责人意见"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="10"
+          style="margin-top:8px"
+        >
           <el-button
             type="primary"
             plain
             icon="el-icon-edit"
+            size="mini"
             @click="dialogSignatureVisible=true"
           >审核签名
           </el-button>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="5"
+          style="margin-top:8px"
+        >
           <el-image :src="reissueJDWSForm.szryJ_QZ_url">
             <div
               slot="error"
               class="image-slot"
-              style="display: flex;    justify-content: center;    align-items: center;"
+              style="display: flex;justify-content: center;align-items: center;font-size:13px"
             >
               未签名
             </div>
@@ -244,10 +234,11 @@
         </el-col>
         <el-col
           v-if="row.status==='0' || !iswt"
-          :span="4"
-          :offset="20"
+          :span="9"
+          style="margin-top:8px"
         >
           <el-button
+            size="mini"
             type="success"
             @click="adopt"
           >
@@ -260,33 +251,40 @@
         :gutter="20"
       >
         <el-divider />
-        <el-col :span="16">
+        <el-col :span="24">
           <el-form-item label="中心领导意见">
             <el-input
               v-model="reissueJDWSForm.zxldyj"
               type="textarea"
-              :rows="4"
+              :rows="3"
               :value="reissueJDWSForm.zxldyj"
               clearable
               placeholder="请输入中心领导意见"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="10"
+          style="margin-top:8px"
+        >
           <el-button
             type="primary"
             plain
+            size="mini"
             icon="el-icon-edit"
             @click="dialogSignatureVisible=true"
           >审核签名
           </el-button>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="5"
+          style="margin-top:8px"
+        >
           <el-image :src="reissueJDWSForm.zxldyJ_QZ_url">
             <div
               slot="error"
               class="image-slot"
-              style="display: flex;    justify-content: center;    align-items: center;"
+              style="display: flex;justify-content: center;align-items: center;font-size:13px"
             >
               未签名
             </div>
@@ -294,10 +292,11 @@
         </el-col>
         <el-col
           v-if="row.status==='0' || !iswt"
-          :span="4"
-          :offset="20"
+          :span="9"
+          style="margin-top:8px"
         >
           <el-button
+            size="mini"
             type="success"
             @click="adopt"
           >
@@ -317,6 +316,7 @@
         <Signature
           v-if="dialogSignatureVisible"
           :jdzy-id="row.jdzy"
+          :signpicture="signpicture"
           @on-save="uploadSignatureImage"
           @on-picture="uploadPicture()"
         />
@@ -337,6 +337,11 @@ export default {
     row: { type: Object, required: true },
     isReissue: { type: Boolean, default: false },
     isExamine: { type: Boolean, default: false },
+    operdm: { type: String, require: true, default: '' },
+    username: { type: String, require: true, default: '' },
+    signpicture: { type: String, default: '' },
+    signpictureid: { type: String, default: '' },
+    sqdwid: { type: String, default: '' },
     reissueSuccessCallBack: {
       type: Function, default: function (response) {
       }
@@ -379,11 +384,11 @@ export default {
         wtid: this.row.wtid,
         classifiedType: '2',
         // 申请单位
-        sqdw: 6,
+        sqdw: parseInt(this.sqdwid),
         // 申请人
-        sqr_name: '吕烨',
+        sqr_name: this.username,
         // 申请人
-        sqr: '738',
+        sqr: this.operdm,
         // 申请时间
         sQ_DATE: new Date(),
         // 鉴定文书编号
@@ -426,13 +431,13 @@ export default {
         status: undefined
       },
       editJDWSRules: {
-        sqdw: [{ required: true, message: '请选择申请人单位', trigger: 'change' }],
-        sqr: [{ required: true, message: '请输入申请人姓名', trigger: 'change' }],
-        sqr_name: [{ required: true, message: '请输入申请人姓名', trigger: 'change' }],
-        sQ_DATE: [{ required: true, message: '请选择申请时间', trigger: 'change' }],
-        jdwsbh: [{ required: true, message: '请输入鉴定文书编号', trigger: 'change' }],
-        jdwsmc: [{ required: true, message: '请输入鉴定文书名称', trigger: 'change' }],
-        sqsy: [{ required: true, message: '请输入申请事由', trigger: 'change' }]
+        sqdw: [{ required: true, message: ' ', trigger: 'change' }],
+        sqr: [{ required: true, message: ' ', trigger: 'change' }],
+        sqr_name: [{ required: true, message: ' ', trigger: 'change' }],
+        sQ_DATE: [{ required: true, message: ' ', trigger: 'change' }],
+        jdwsbh: [{ required: true, message: ' ', trigger: 'change' }],
+        jdwsmc: [{ required: true, message: ' ', trigger: 'change' }],
+        sqsy: [{ required: true, message: ' ', trigger: 'change' }]
       }
     }
   },
@@ -478,14 +483,14 @@ export default {
     uploadPicture: function () {
       this.dialogSignatureVisible = false
       if (this.step === '0') {
-        this.reissueJDWSForm.sqdwyJ_QZ_url = this.$store.state.user.signature
-        this.reissueJDWSForm.sqdwyJ_QZ = this.$store.state.user.signatureid
+        this.reissueJDWSForm.sqdwyJ_QZ_url = this.signpicture
+        this.reissueJDWSForm.sqdwyJ_QZ = this.signpictureid
       } else if (this.step === '1') {
-        this.reissueJDWSForm.szryJ_QZ_url = this.$store.state.user.signature
-        this.reissueJDWSForm.szryJ_QZ = this.$store.state.user.signatureid
+        this.reissueJDWSForm.szryJ_QZ_url = this.signpicture
+        this.reissueJDWSForm.szryJ_QZ = this.signpictureid
       } else if (this.step === '2') {
-        this.reissueJDWSForm.zxldyJ_QZ_url = this.$store.state.user.signature
-        this.reissueJDWSForm.zxldyJ_QZ = this.$store.state.user.signatureid
+        this.reissueJDWSForm.zxldyJ_QZ_url = this.signpicture
+        this.reissueJDWSForm.zxldyJ_QZ = this.signpictureid
       }
     },
     adopt: function () {
@@ -499,7 +504,7 @@ export default {
             type: 'warning'
           }).then(() => {
             this.reissueJDWSForm.status = '1'
-            this.reissueJDWSForm.sqdwyJ_OPERDM = this.$store.state.user.operdm
+            this.reissueJDWSForm.sqdwyJ_OPERDM = this.operdm
             this.reissueJDWSForm.sqdwyJ_DATE = new Date()
             update_modifyword(this.reissueJDWSForm).then(response => {
               this.$message.success('审核成功！')
@@ -522,7 +527,7 @@ export default {
             type: 'warning'
           }).then(() => {
             this.reissueJDWSForm.status = '2'
-            this.reissueJDWSForm.szryJ_OPERDM = this.$store.state.user.operdm
+            this.reissueJDWSForm.szryJ_OPERDM = this.operdm
             this.reissueJDWSForm.szryJ_DATE = new Date()
             update_modifyword(this.reissueJDWSForm).then(response => {
               this.$message.success('审核成功！')
@@ -545,7 +550,7 @@ export default {
             type: 'warning'
           }).then(() => {
             this.reissueJDWSForm.status = '3'
-            this.reissueJDWSForm.zxldyJ_OPERDM = this.$store.state.user.operdm
+            this.reissueJDWSForm.zxldyJ_OPERDM = this.operdm
             this.reissueJDWSForm.zxldyJ_DATE = new Date()
             update_modifyword(this.reissueJDWSForm).then(response => {
               this.$message.success('审核成功！')
@@ -607,15 +612,53 @@ export default {
   /* top: 30% !important; */
   left: 15px !important;
 }
+.el-cascader__dropdown {
+  left: 0 !important;
+}
+.el-cascader-panel {
+  display: block !important;
+}
+.el-cascader-menu:nth-of-type(1) {
+  height: 46px !important;
+}
+.el-cascader-menu:nth-of-type(2) {
+  height: 106px !important;
+}
+.el-select-dropdown__item {
+  font-size: 13px;
+  height: 30px;
+  line-height: 30px;
+}
 </style>
 <style lang="scss" scoped>
 .el-button {
   width: 100%;
 }
-::v-deep .el-form-item__content {
-  line-height: 20px;
+// ::v-deep .el-form-item__content {
+//   line-height: 20px;
+// }
+::v-deep .el-input__inner {
+  font-size: 12px;
+  height: 28px;
+  line-height: 28px;
 }
 ::v-deep .el-input__prefix {
   display: none;
+}
+::v-deep .el-input--prefix .el-input__inner {
+  padding-left: 15px;
+}
+.tipStyle {
+  margin-left: -80px;
+  line-height: 1.8;
+  font-size: 12px;
+  margin-top: 5px;
+}
+::v-deep .el-form-item--mini.el-form-item {
+  margin-bottom: 3px;
+}
+::v-deep .el-divider {
+  height: 1.5px;
+  margin: 5px 0px 8px;
 }
 </style>

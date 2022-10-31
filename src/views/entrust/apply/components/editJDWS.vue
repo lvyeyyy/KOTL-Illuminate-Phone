@@ -4,7 +4,7 @@
       ref="editJDWSForm"
       :model="editJDWSForm"
       :rules="editJDWSRules"
-      label-width="80px"
+      label-width="78px"
       size="mini"
     >
       <el-row :gutter="20">
@@ -77,7 +77,7 @@
             <el-input
               v-model="editJDWSForm.xgnr"
               type="textarea"
-              :rows="5"
+              :rows="3"
               :value="editJDWSForm.xgnr"
               clearable
               placeholder="请输入修改详细内容"
@@ -92,7 +92,7 @@
             <el-input
               v-model="editJDWSForm.xgly"
               type="textarea"
-              :rows="5"
+              :rows="3"
               :value="editJDWSForm.xgly"
               clearable
               placeholder="请输入修改理由"
@@ -102,11 +102,13 @@
       </el-row>
       <el-row v-if="(row.status==='0' && !isExamine) || row.status==='已发文'">
         <el-col
-          :span="4"
-          :offset="20"
+          :span="24"
+          style="text-align:center;"
         >
           <el-button
             type="primary"
+            size="mini"
+            style="width:66%;margin-top:5px"
             @click="submitApply"
           >{{ isEdit?'修改':'提交申请' }}</el-button>
         </el-col>
@@ -116,33 +118,43 @@
         :gutter="20"
       >
         <el-divider />
-        <el-col :span="16">
-          <el-form-item label="申请部门意见">
+        <el-col :span="24">
+          <el-form-item
+            label="申请部门意见"
+            label-width="92px"
+          >
             <el-input
               v-model="editJDWSForm.sqbmyj"
               type="textarea"
-              :rows="4"
+              :rows="3"
               :value="editJDWSForm.sqbmyj"
               clearable
               placeholder="请输入申请部门意见"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="9"
+          style="margin-top:8px"
+        >
           <el-button
             type="primary"
             plain
             icon="el-icon-edit"
+            size="mini"
             @click="dialogSignatureVisible=true"
           >审核签名
           </el-button>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="6"
+          style="margin-top:8px"
+        >
           <el-image :src="editJDWSForm.sqbmyJ_QZ_url">
             <div
               slot="error"
               class="image-slot"
-              style="display: flex;    justify-content: center;    align-items: center;"
+              style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
             >
               未签名
             </div>
@@ -150,11 +162,12 @@
         </el-col>
         <el-col
           v-if="row.status==='0'"
-          :span="4"
-          :offset="20"
+          :span="9"
+          style="margin-top:8px"
         >
           <el-button
             type="success"
+            size="mini"
             @click="adopt"
           >
             通过
@@ -166,33 +179,43 @@
         :gutter="20"
       >
         <el-divider />
-        <el-col :span="16">
-          <el-form-item label="室主任意见">
+        <el-col :span="24">
+          <el-form-item
+            label="室主任意见"
+            label-width="82px"
+          >
             <el-input
               v-model="editJDWSForm.szryj"
               type="textarea"
-              :rows="4"
+              :rows="3"
               :value="editJDWSForm.szryj"
               clearable
               placeholder="请输入室主任意见"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="9"
+          style="margin-top:8px"
+        >
           <el-button
             type="primary"
             plain
             icon="el-icon-edit"
+            size="mini"
             @click="dialogSignatureVisible=true"
           >审核签名
           </el-button>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="6"
+          style="margin-top:8px"
+        >
           <el-image :src="editJDWSForm.szryJ_QZ_url">
             <div
               slot="error"
               class="image-slot"
-              style="display: flex;    justify-content: center;    align-items: center;"
+              style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
             >
               未签名
             </div>
@@ -200,11 +223,12 @@
         </el-col>
         <el-col
           v-if="row.status==='0' || !iswt"
-          :span="4"
-          :offset="20"
+          :span="9"
+          style="margin-top:8px"
         >
           <el-button
             type="success"
+            size="mini"
             @click="adopt"
           >
             通过
@@ -216,33 +240,43 @@
         :gutter="20"
       >
         <el-divider />
-        <el-col :span="16">
-          <el-form-item label="中心领导意见">
+        <el-col :span="24">
+          <el-form-item
+            label="中心领导意见"
+            label-width="96px"
+          >
             <el-input
               v-model="editJDWSForm.zxldyj"
               type="textarea"
-              :rows="4"
+              :rows="3"
               :value="editJDWSForm.zxldyj"
               clearable
               placeholder="请输入中心领导意见"
             />
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="10"
+          style="margin-top:8px"
+        >
           <el-button
             type="primary"
             plain
             icon="el-icon-edit"
+            size="mini"
             @click="dialogSignatureVisible=true"
           >审核签名
           </el-button>
         </el-col>
-        <el-col :span="4">
+        <el-col
+          :span="5"
+          style="margin-top:8px"
+        >
           <el-image :src="editJDWSForm.zxldyJ_QZ_url">
             <div
               slot="error"
               class="image-slot"
-              style="display: flex;    justify-content: center;    align-items: center;"
+              style="display: flex;justify-content: center;align-items: center;font-size:13px"
             >
               未签名
             </div>
@@ -250,11 +284,12 @@
         </el-col>
         <el-col
           v-if="row.status==='0' || !iswt"
-          :span="4"
-          :offset="20"
+          :span="9"
+          style="margin-top:8px"
         >
           <el-button
             type="success"
+            size="mini"
             @click="adopt"
           >
             通过
@@ -265,7 +300,7 @@
     <el-dialog
       title="签名"
       :visible.sync="dialogSignatureVisible"
-      width="644px"
+      width="100%"
       :close-on-click-modal="false"
       append-to-body
       destroy-on-close
@@ -275,6 +310,7 @@
       <Signature
         v-if="dialogSignatureVisible"
         :jdzy-id="row.jdzy"
+        :signpicture="signpicture"
         @on-save="uploadSignatureImage"
         @on-picture="uploadPicture()"
       />
@@ -293,6 +329,10 @@ export default {
     row: { type: Object, required: true },
     isEdit: { type: Boolean, default: false },
     isExamine: { type: Boolean, default: false },
+    operdm: { type: String, require: true, default: '' },
+    username: { type: String, require: true, default: '' },
+    signpicture: { type: String, default: '' },
+    signpictureid: { type: String, default: '' },
     editSuccessCallBack: {
       type: Function, default: function (response) {
       }
@@ -332,9 +372,9 @@ export default {
         wtid: this.row.wtid,
         classifiedType: '1',
         // 申请人
-        sqr_name: this.$store.state.user.name,
+        sqr_name: this.username,
         // 申请人
-        sqr: this.$store.state.user.operdm,
+        sqr: this.operdm,
         // 申请时间
         sQ_DATE: new Date(),
         // 修改鉴定文书编号
@@ -379,12 +419,12 @@ export default {
       isShowEntrustSignature: false,
       dialogSignatureVisible: false,
       editJDWSRules: {
-        sqr: [{ required: true, message: '请输入申请人姓名', trigger: 'change' }],
-        sqr_name: [{ required: true, message: '请输入申请人姓名', trigger: 'change' }],
-        sQ_DATE: [{ required: true, message: '请选择申请时间', trigger: 'change' }],
-        posT_XH: [{ required: true, message: '请输入修改鉴定文书编号', trigger: 'change' }],
-        xgnr: [{ required: true, message: '请输入修改详细内容', trigger: 'change' }],
-        xgly: [{ required: true, message: '请输入修改理由', trigger: 'change' }]
+        sqr: [{ required: true, message: ' ', trigger: 'change' }],
+        sqr_name: [{ required: true, message: ' ', trigger: 'change' }],
+        sQ_DATE: [{ required: true, message: ' ', trigger: 'change' }],
+        posT_XH: [{ required: true, message: ' ', trigger: 'change' }],
+        xgnr: [{ required: true, message: ' ', trigger: 'change' }],
+        xgly: [{ required: true, message: ' ', trigger: 'change' }]
       }
     }
   },
@@ -428,14 +468,14 @@ export default {
     uploadPicture: function () {
       this.dialogSignatureVisible = false
       if (this.step === '0') {
-        this.editJDWSForm.sqbmyJ_QZ_url = this.$store.state.user.signatureid
-        this.editJDWSForm.sqbmyJ_QZ = this.$store.state.user.signatureid
+        this.editJDWSForm.sqbmyJ_QZ_url = this.signpicture
+        this.editJDWSForm.sqbmyJ_QZ = this.signpictureid
       } else if (this.step === '1') {
-        this.editJDWSForm.szryJ_QZ_url = this.$store.state.user.signatureid
-        this.editJDWSForm.szryJ_QZ = this.$store.state.user.signatureid
+        this.editJDWSForm.szryJ_QZ_url = this.signpicture
+        this.editJDWSForm.szryJ_QZ = this.signpictureid
       } else if (this.step === '2') {
-        this.editJDWSForm.zxldyJ_QZ_url = this.$store.state.user.signatureid
-        this.editJDWSForm.zxldyJ_QZ = this.$store.state.user.signatureid
+        this.editJDWSForm.zxldyJ_QZ_url = this.signpicture
+        this.editJDWSForm.zxldyJ_QZ = this.signpictureid
       }
     },
     adopt: function () {
@@ -449,7 +489,7 @@ export default {
             type: 'warning'
           }).then(() => {
             this.editJDWSForm.status = '1'
-            this.editJDWSForm.sqbmyJ_OPERDM = this.$store.state.user.operdm
+            this.editJDWSForm.sqbmyJ_OPERDM = this.operdm
             this.editJDWSForm.sqbmyJ_DATE = new Date()
             update_modifyword(this.editJDWSForm).then(response => {
               this.$message.success('审核成功！')
@@ -472,7 +512,7 @@ export default {
             type: 'warning'
           }).then(() => {
             this.editJDWSForm.status = '2'
-            this.editJDWSForm.szryJ_OPERDM = this.$store.state.user.operdm
+            this.editJDWSForm.szryJ_OPERDM = this.operdm
             this.editJDWSForm.szryJ_DATE = new Date()
             update_modifyword(this.editJDWSForm).then(response => {
               this.$message.success('审核成功！')
@@ -495,7 +535,7 @@ export default {
             type: 'warning'
           }).then(() => {
             this.editJDWSForm.status = '3'
-            this.editJDWSForm.zxldyJ_OPERDM = this.$store.state.user.operdm
+            this.editJDWSForm.zxldyJ_OPERDM = this.operdm
             this.editJDWSForm.zxldyJ_DATE = new Date()
             update_modifyword(this.editJDWSForm).then(response => {
               this.$message.success('审核成功！')
@@ -550,10 +590,29 @@ export default {
   width: 100%;
 }
 ::v-deep .el-divider {
-  height: 2px;
-  margin: 10px 0px;
+  height: 1.5px;
+  margin: 5px 0px 8px;
 }
 ::v-deep .el-input__prefix {
   display: none;
+}
+::v-deep .el-form-item--mini.el-form-item {
+  margin-bottom: 3px;
+}
+::v-deep .el-input--prefix .el-input__inner {
+  padding-left: 15px;
+}
+::v-deep .el-dialog__body {
+  padding: 0 10px 15px 10px;
+}
+::v-deep .el-dialog__title {
+  font-size: 16px;
+}
+::v-deep .el-dialog__header {
+  padding: 10px 20px 10px;
+}
+::v-deep .el-dialog__headerbtn {
+  top: 2%;
+  font-size: 23px;
 }
 </style>

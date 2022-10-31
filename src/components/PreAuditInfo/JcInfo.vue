@@ -929,7 +929,7 @@ export default {
   top: 1%;
   font-size: 23px;
 }
-/* .el-upload--picture-card {
+.el-upload--picture-card {
   display: none;
-} */
+}
 </style>

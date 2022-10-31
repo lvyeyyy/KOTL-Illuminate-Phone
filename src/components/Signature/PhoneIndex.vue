@@ -62,7 +62,8 @@ export default {
   name: 'Signature',
   props: {
     jdzyId: { type: String, required: false, default: '2' },
-    isFourAuditor: { type: Boolean, default: false }
+    isFourAuditor: { type: Boolean, default: false },
+    signpicture: { type: String, default: '' }
   },
   data() {
     return {
@@ -121,7 +122,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        if (this.$store.state.user.signature === '' || this.$store.state.user.signature === undefined) {
+        if (this.signpicture === '' || this.signpicture === undefined) {
           this.$message.info('个人中心中没有签字图片，请先上传！')
         } else {
           this.$emit('on-picture', true)

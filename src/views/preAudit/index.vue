@@ -132,21 +132,16 @@
 <script>
 function clientGetToken() {
   return client.getToken()
-  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiYjMxZmRjYzAtMjBkMC00YmJkLTkzN2ItMDdhOWM2ZjVmNTVkIiwiaWF0IjoiMjAyMi8xMC8yNSA4OjU3OjM1IiwibmFtZWlkIjoiNzc2IiwibmJmIjoxNjY2NjU5NDU1LCJleHAiOjE2NjY2NjEyNTUsImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.O7FqO2g8dSvSxlrnrwH2K_L3whZyrgybvDBmZr_doqE'
+  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiY2RjODA2MDAtNDg5Ny00OTVlLWFlMmEtZmViY2RlMWNiMDc5IiwiaWF0IjoiMjAyMi8xMC8yOCAxMDowNjozNSIsIm5hbWVpZCI6Ijc3NiIsIm5iZiI6MTY2NjkyMjc5NSwiZXhwIjoxNjY2OTI0NTk1LCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.HobGnk2Bfh4gcpZdKfys-n2ZT0JQ_6Jpby1BAgRIfFc'
 }
 function clientGetCaseId() {
   return client.getAjid()
-  // return '3295'
+  // return '3296'
 }
 function clientGetWtId() {
   return client.getWtid()
-  // return '3337'
+  // return '3338'
 }
-
-// function clientGetOjdzy() {
-//   // return client.getJdzy()
-//   return '2'
-// }
 
 import CaseInfo from '../preAudit/caseInfo.vue'
 import WtInfo from '../preAudit/entrustInfo.vue'
@@ -178,7 +173,6 @@ export default {
     this.$store.commit('user/SET_TOKEN2', tokentest)
     this.caseId = clientGetCaseId()
     this.entrustId = clientGetWtId()
-    // this.jdzy = clientGetOjdzy()
   },
   methods: {
     goClick() {
@@ -188,13 +182,6 @@ export default {
         this.active++
       }
     },
-    // backList() {
-    //   if (this.active === 0) {
-    //     console.log('第一项')
-    //   } else {
-    //     this.active--
-    //   }
-    // },
     hadleClick(index) {
       this.active = index
     }

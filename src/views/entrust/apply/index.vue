@@ -12,24 +12,12 @@
           <el-form
             ref="queryApplyForm"
             :model="queryApplyForm"
+            label-width="125px"
           >
             <el-row :gutter="20">
-              <el-col :span="12">
+              <el-col :span="24">
                 <el-form-item
-                  label="发文号"
-                  prop="posT_XH"
-                  label-width="70px"
-                >
-                  <el-input
-                    v-model="queryApplyForm.posT_XH"
-                    :value="queryApplyForm.posT_XH"
-                    clearable
-                    placeholder="发文号"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item
+                  class="borderStyle"
                   label="申请类型"
                   prop="classifiedType"
                   label-width="70px"
@@ -48,9 +36,10 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-divider />
+              <el-divider class="diviStyle" />
               <el-col :span="19">
                 <el-form-item
+                  class="borderStyle"
                   label="申请时间"
                   prop="SQDATE"
                   label-width="70px"
@@ -81,7 +70,7 @@
                 >查询
                 </el-button>
               </el-col>
-              <el-divider />
+              <el-divider class="diviStyle" />
             </el-row>
           </el-form>
         </el-card>
@@ -99,32 +88,37 @@
           :data="applyTableData"
           :infinite-scroll-immediate="false"
         >
-          <el-table-column width="190">
+          <el-table-column width="180">
             <template slot-scope="scope">
               <div style="font-size:15px;margin-bottom:5px">{{ scope.row.ajname }}</div>
-              <div style="font-size:12px;color: #9c9898;">申请时间</div>
+              <div style="font-size:12px;color: #9c9898;margin-top:-5px">申请时间</div>
               <div class="timeClass">{{ scope.row.sq_date }}</div>
-              <div style="font-size:12px;color: #9c9898;margin-top:5px">申请人</div>
-              <div class="timeClass">{{ scope.row.sqrname }}</div>
+              <div style="font-size:12px;color: #9c9898;">状态</div>
+              <div class="timeClass">{{ formatStatus(scope.row.status) }}</div>
             </template>
           </el-table-column>
           <el-table-column>
             <template slot-scope="scope">
-              <div style="width: 70%;margin-left: 35%;font-size: 12px;text-align: center;">{{ formatStatus(scope.row.status) }}</div>
-              <el-button
-                size="mini"
-                type="primary"
-                style="margin-left:35%"
-                @click="ckApply(scope.row)"
-              >查看申请
-              </el-button>
-              <el-button
-                size="mini"
-                type="success"
-                style="margin-left:35%"
-                @click="finishApply(scope.row)"
-              >{{ scope.row.status==='4'?'已完成':'完成' }}
-              </el-button>
+              <div class="rightInfo">申请人&nbsp;{{ scope.row.sqrname }}</div>
+              <el-row style="width:126%;text-align:center">
+                <el-button
+                  size="mini"
+                  type="primary"
+                  style="width:68px"
+                  @click="ckApply(scope.row)"
+                >详情
+                </el-button>
+              </el-row>
+              <el-row style="width:126%;text-align:center">
+                <el-button
+                  size="mini"
+                  style="margin-top:5px;width:68px"
+                  type="success"
+                  @click="finishApply(scope.row)"
+                >{{ scope.row.status==='4'?'已完成':'完成' }}
+                </el-button>
+              </el-row>
+              <div style="font-size:12px;color: #9c9898;margin-top:5px;text-align:center;width:126%">{{ scope.row.classifiedtype==='1'?'文书修改':'文书补发' }}</div>
             </template>
           </el-table-column>
         </el-table>
@@ -135,7 +129,7 @@
       title="申请修改鉴定文书"
       :visible.sync="dialogEditJDWSVisible"
       append-to-body
-      width="75%"
+      width="95%"
       destroy-on-close
     >
       <editJDWS
@@ -143,7 +137,31 @@
         :is-examine="isExamine"
         :is-edit="true"
         :iswt="true"
+        :operdm="operdm"
+        :username="username"
+        :signpicture="signpicture"
+        :signpictureid="signpictureid"
         :edit-success-call-back="editSuccessCallBack"
+      />
+    </el-dialog>
+    <el-dialog
+      v-if="dialogReissueJDWSVisible"
+      title="申请补发鉴定文书"
+      :visible.sync="dialogReissueJDWSVisible"
+      append-to-body
+      width="95%"
+      destroy-on-close
+    >
+      <reissueJDWS
+        :row="row"
+        :is-examine="isExamine"
+        :is-reissue="true"
+        :iswt="true"
+        :operdm="operdm"
+        :username="username"
+        :signpicture="signpicture"
+        :signpictureid="signpictureid"
+        :reissue-success-call-back="reissueSuccessCallBack"
       />
     </el-dialog>
     <el-dialog
@@ -151,11 +169,14 @@
       title="完成修改鉴定文书申请"
       :visible.sync="dialogFinshJDWSVisible"
       append-to-body
-      width="75%"
+      width="95%"
       destroy-on-close
     >
       <finishEditJDWS
         :row="row"
+        :operdm="operdm"
+        :signpicture="signpicture"
+        :signpictureid="signpictureid"
         :finish-edit-success-call-back="finishEditSuccessCallBack"
       />
     </el-dialog>
@@ -164,11 +185,14 @@
       title="完成补发鉴定文书申请"
       :visible.sync="dialogFinshJDWSVisible2"
       append-to-body
-      width="75%"
+      width="95%"
       destroy-on-close
     >
       <finishReissueJDWS
         :row="row"
+        :operdm="operdm"
+        :signpicture="signpicture"
+        :signpictureid="signpictureid"
         :finish-reissue-success-call-back="finishReissueSuccessCallBack"
       />
     </el-dialog>
@@ -177,77 +201,106 @@
 
 <script>
 function clientGetToken() {
-  //   return client.getToken()
-  return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdnllIiwianRpIjoiMDBlYTRhM2YtZjg1OC00YTdkLWIzMWItNTQyMmRlZTk4YWJkIiwiaWF0IjoiMjAyMi8xMC8yNiAxNDoyMDo0OSIsIm5hbWVpZCI6IjczOCIsIm5iZiI6MTY2Njc2NTI0OSwiZXhwIjoxNjY2NzY3MDQ5LCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.2HPRNNG-NBqLzzPBGKG0O2Xqwzdb3LkQimLUzDfAw0o'
+  return client.getToken()
+  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiY2RjODA2MDAtNDg5Ny00OTVlLWFlMmEtZmViY2RlMWNiMDc5IiwiaWF0IjoiMjAyMi8xMC8yOCAxMDowNjozNSIsIm5hbWVpZCI6Ijc3NiIsIm5iZiI6MTY2NjkyMjc5NSwiZXhwIjoxNjY2OTI0NTk1LCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.HobGnk2Bfh4gcpZdKfys-n2ZT0JQ_6Jpby1BAgRIfFc'
 }
+function clientGetOperdm() {
+  return client.getOperdm()
+  // return '776'
+}
+function clientGetUsername() {
+  return client.getRealname()
+  // return '王敏'
+}
+function clientGetSignpicture() {
+  return client.getSignature()
+  // return 'http://192.168.0.88:8040//LHS/UserSign/2022/10/27/6826e2302240c858c78d72c9b44f939e.PNG'
+}
+function clientGetSignpictureid() {
+  return client.getSignatureid()
+  // return '26387'
+}
+
 import { datePeriodPickerOptions } from '@/utils/tool'
-import { acquiremodifyword } from '@/api/word'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
+import { acquiremodifyword } from '@/api/word'
 import editJDWS from './components/editJDWS.vue'
+import reissueJDWS from './reissueJDWS.vue'
 import finishEditJDWS from './components/finish.vue'
 import finishReissueJDWS from './components/finish2.vue'
 
 export default {
-  components: { editJDWS, finishEditJDWS, finishReissueJDWS },
+  components: { editJDWS, reissueJDWS, finishEditJDWS, finishReissueJDWS },
   directives: {
     'el-table-infinite-scroll': elTableInfiniteScroll
   },
   data() {
     return {
+      applyTableData: [],
+      tableLoading: false,
+      totalPage: 0,
       queryApplyForm: {
         // 申请人
-        sqr: this.$store.state.user.operdm,
+        sqr: '',
         // 发文号
         posT_XH: '',
         // 申请时间
         SQDATE: [],
         // 申请类型
-        classifiedType: '1',
+        classifiedType: '',
         // 每页条数
         pageSize: 10,
         // 当前页数
         pageIndex: 1,
         status: '3,4'
       },
-      applyTableData: [],
-      tableLoading: false,
-      pickerOptions: datePeriodPickerOptions,
-      totalPage: 0,
-      row: undefined,
       optionList: {
         entrustPeopleOption: [],
         typeList: [{
           value: '1',
-          label: '鉴定文书修改'
+          label: '文书修改'
         }, {
           value: '2',
-          label: '补发申请'
+          label: '文书补发'
         }
         ]
       },
+      pickerOptions: datePeriodPickerOptions,
       isExamine: false,
       dialogEditJDWSVisible: false,
-      dialogUpdateJDWSVisible: false,
+      dialogReissueJDWSVisible: false,
       dialogFinshJDWSVisible: false,
-      dialogFinshJDWSVisible2: false
+      dialogFinshJDWSVisible2: false,
+      row: undefined,
+      operdm: '',
+      username: '',
+      signpicture: '',
+      signpictureid: ''
     }
   },
   created() {
     this.tokentest = clientGetToken()
     var tokentest = this.tokentest
     this.$store.commit('user/SET_TOKEN2', tokentest)
+    this.operdm = clientGetOperdm()
+    this.queryApplyForm.sqr = this.operdm
+    this.username = clientGetUsername()
+    this.signpicture = clientGetSignpicture()
+    this.signpictureid = clientGetSignpictureid()
     this.getApplyList()
   },
   methods: {
     // 查看
-    ckApply: function (row) {
+    ckApply(row) {
       this.row = row
       this.isExamine = false
       if (row.classifiedtype === '1') {
         this.dialogEditJDWSVisible = true
+      } else {
+        this.dialogReissueJDWSVisible = true
       }
     },
-    finishApply: function (row) {
+    finishApply(row) {
       this.row = row
       if (row.classifiedtype === '1') {
         this.dialogFinshJDWSVisible = true
@@ -255,47 +308,26 @@ export default {
         this.dialogFinshJDWSVisible2 = true
       }
     },
-    editSuccessCallBack() {
-      this.dialogEditJDWSVisible = false
-      this.getApplyList()
-    },
-    updateSuccessCallBack() {
-      this.dialogUpdateJDWSVisible = false
-      this.getApplyList()
-    },
-    finishEditSuccessCallBack() {
-      this.dialogFinshJDWSVisible = false
-      this.getApplyList()
-    },
-    finishReissueSuccessCallBack() {
-      this.dialogFinshJDWSVisible2 = false
-      this.getApplyList()
-    },
-    // 点击选择日期不调用输入法
-    elDatePickerOnFocus() {
-      document.activeElement.blur()
-    },
-    // 获取表格数据
+    // 获取委托表格数据
     getApplyList() {
       this.tableLoading = true
       acquiremodifyword(this.queryApplyForm).then(response => {
-        // console.log('11', response.data)
         this.applyTableData = this.applyTableData.concat(response.data.rows)
         this.totalPage = Math.ceil(response.data.total / 10)
         this.tableLoading = false
       })
     },
     // 格式化状态
-    formatStatus(cellValue) {
-      if (cellValue === '0') {
+    formatStatus(status) {
+      if (status === '0') {
         return '待委托方领导审核'
-      } else if (cellValue === '1') {
+      } else if (status === '1') {
         return '委托方领导已审核'
-      } else if (cellValue === '2') {
+      } else if (status === '2') {
         return '鉴定中心授权人确认'
-      } else if (cellValue === '3') {
+      } else if (status === '3') {
         return '鉴定中心领导已审核'
-      } else if (cellValue === '4') {
+      } else if (status === '4') {
         return '检验人完成'
       } else {
         return '未知状态'
@@ -315,17 +347,47 @@ export default {
       this.queryApplyForm.pageIndex = 1
       this.applyTableData = []
       this.getApplyList()
+    },
+    // 点击选择日期不调用输入法
+    elDatePickerOnFocus() {
+      document.activeElement.blur()
+    },
+    editSuccessCallBack() {
+      this.dialogEditJDWSVisible = false
+      this.applyTableData = []
+      this.getApplyList()
+    },
+    reissueSuccessCallBack() {
+      this.dialogReissueJDWSVisible = false
+      this.applyTableData = []
+      this.getApplyList()
+    },
+    finishEditSuccessCallBack() {
+      this.dialogFinshJDWSVisible = false
+      this.applyTableData = []
+      this.getApplyList()
+    },
+    finishReissueSuccessCallBack() {
+      this.dialogFinshJDWSVisible2 = false
+      this.applyTableData = []
+      this.getApplyList()
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
+::v-deep .el-select {
+  width: 100%;
+}
 ::v-deep .el-table__header-wrapper {
   display: none;
 }
 ::v-deep .el-table__body-wrapper {
   overflow-y: scroll !important;
+}
+::v-deep .borderStyle .el-input__inner {
+  border: none;
 }
 .timeClass {
   font-size: 13px;
@@ -335,13 +397,13 @@ export default {
 ::v-deep .el-table td {
   padding: 15px 0;
 }
-// .auditBtn {
-//   margin-left: 36%;
-//   padding: 5px 8px;
-//   font-size: 14px;
-//   width: 62%;
-//   text-align: center;
-// }
+.auditBtn {
+  margin-left: 36%;
+  padding: 5px 8px;
+  font-size: 14px;
+  width: 62%;
+  text-align: center;
+}
 ::v-deep .el-table__body-wrapper::-webkit-scrollbar {
   width: 0 !important;
 }
@@ -360,40 +422,43 @@ export default {
 .my-card {
   height: 100%;
 }
-::v-deep .el-form-item__label {
+::v-deep .borderStyle .el-form-item__label {
   font-size: 13px;
   font-weight: normal;
   color: #9c9898;
 }
 ::v-deep .el-input__inner {
-  border: none;
-  padding: 0 !important;
+  // border: none;
+  // padding: 0 !important;
   text-align: left;
   font-size: 12px;
 }
 ::v-deep .el-form-item {
   margin-bottom: 0;
-  padding: 1% 0 0 1%;
+  // padding: 1% 0 0 1%;
 }
-::v-deep .el-divider--horizontal {
+::v-deep .diviStyle.el-divider--horizontal {
   margin: 12% 0 0 4%;
   background-color: #eee;
   width: 93%;
 }
-// .rightInfo {
-//   font-size: 12.5px;
-//   color: #85aaf1;
-//   width: 126%;
-//   text-align: center;
-// }
+.rightInfo {
+  font-size: 12.5px;
+  color: #85aaf1;
+  width: 126%;
+  text-align: center;
+}
 ::v-deep .el-dialog__title {
-  font-size: 16px;
+  font-size: 15px;
 }
 ::v-deep .el-dialog__header {
   padding: 10px 20px 10px;
 }
 ::v-deep .el-dialog__body {
-  padding: 20px;
+  padding: 0 10px 15px 10px;
+}
+::v-deep .el-form-item__label {
+  font-size: 13px;
 }
 ::v-deep .el-dialog__headerbtn {
   top: 2%;

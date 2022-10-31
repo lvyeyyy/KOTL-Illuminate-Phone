@@ -180,6 +180,7 @@
         v-if="isShowSignature"
         :is-four-auditor="isFourAuditor"
         :jdzy-id="jdzyId"
+        :signpicture="signpicture"
         @on-save="uploadImage"
         @on-picture="uploadPicture"
       />
@@ -190,16 +191,21 @@
 <script>
 function clientGetToken() {
   return client.getToken()
-  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiMjE3YWZjN2QtNjJlMC00MDJkLWEwNGYtYTFlNGM0OGQ3MDAxIiwiaWF0IjoiMjAyMi85LzIxIDg6NDM6MDMiLCJuYW1laWQiOiI3MzciLCJuYmYiOjE2NjM3MjA5ODMsImV4cCI6MTY2MzcyMjc4MywiaXNzIjoiand0X3VzZXIiLCJhdWQiOiJqd3RfYXVkaWVuY2UifQ.kTkoV-VKU52ZRJheP4D7YCgkCLyF8RuOT9jWaeP1e7A'
+  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiY2RjODA2MDAtNDg5Ny00OTVlLWFlMmEtZmViY2RlMWNiMDc5IiwiaWF0IjoiMjAyMi8xMC8yOCAxMDowNjozNSIsIm5hbWVpZCI6Ijc3NiIsIm5iZiI6MTY2NjkyMjc5NSwiZXhwIjoxNjY2OTI0NTk1LCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.HobGnk2Bfh4gcpZdKfys-n2ZT0JQ_6Jpby1BAgRIfFc'
 }
 
 function clientGetOTaskId() {
   return client.getWtid()
-  // return '3156'
+  // return '3109'
 }
 function clientGetOjdzy() {
   return client.getJdzy()
   // return '2'
+}
+
+function clientGetSignpicture() {
+  return client.getSignature()
+  // return 'http://192.168.0.88:8040//LHS/UserSign/2022/10/27/6826e2302240c858c78d72c9b44f939e.PNG'
 }
 
 import { getEntrustInfoByEntrustID, getpostxhbywtid, updateAuditStatusByEntrustId, getpin } from '@/api/entrust'
@@ -257,7 +263,8 @@ export default {
       dialogSignatureVisible: false,
       isShowSignature: false,
       isPin: undefined,
-      auditSignatureImageId: 0
+      auditSignatureImageId: 0,
+      signpicture: ''
     }
   },
   computed: {
@@ -316,6 +323,7 @@ export default {
     this.entrustId = clientGetOTaskId()
     var entrustId = this.entrustId
     this.jdzyId = clientGetOjdzy()
+    this.signpicture = clientGetSignpicture()
     this.getpin()
     // 查询委托信息
     getEntrustInfoByEntrustID(entrustId).then(response => {

@@ -17,6 +17,7 @@
             <el-row :gutter="20">
               <el-col :span="24">
                 <el-form-item
+                  class="borderStyle"
                   label="受理编号"
                   prop="SLXH"
                   label-width="70px"
@@ -32,6 +33,7 @@
               <el-divider />
               <el-col :span="19">
                 <el-form-item
+                  class="borderStyle"
                   label="委托时间"
                   prop="wtdate"
                   label-width="70px"
@@ -91,27 +93,34 @@
           </el-table-column>
           <el-table-column>
             <template slot-scope="scope">
-              <div style="font-size:12.5px;color:#8e8b8b;margin-left:33%;width: 70%;text-align: center;">{{ scope.row.sl_year_xh }}</div>
-              <div style="width: 70%;margin-left: 35%;font-size: 12px;text-align: center;">{{ scope.row.status }}</div>
-              <el-button
+              <el-row style="width:126%;text-align:center">
+                <div style="font-size:12.5px;color:#8e8b8b;text-align: center;">{{ scope.row.sl_year_xh }}</div>
+              </el-row>
+              <el-row style="width:126%;text-align:center">
+                <div style="font-size: 12px;text-align: center;">{{ scope.row.status }}</div>
+              </el-row>
+              <!-- <el-button
                 size="mini"
                 type="primary"
                 style="margin-left:35%"
                 @click="wtBtnClick(scope.row)"
-              >委托步骤</el-button>
-              <el-button
-                size="mini"
-                style="margin-left:35%;margin-top:3px"
-                :disabled="getPrintDisabled(scope.row)"
-                :type="getPrintStatus(scope.row)"
-                @click="print(scope.row)"
-              >查看文书</el-button>
-              <el-button
-                size="mini"
-                type="warning"
-                style="margin-left:35%;margin-top:5px;"
-                @click="reissue(scope.row)"
-              >遗失补发</el-button>
+              >委托步骤</el-button> -->
+              <el-row style="width:126%;text-align:center">
+                <el-button
+                  size="mini"
+                  :disabled="getPrintDisabled(scope.row)"
+                  :type="getPrintStatus(scope.row)"
+                  @click="print(scope.row)"
+                >查看文书</el-button>
+              </el-row>
+              <el-row style="width:126%;text-align:center;margin-top:5px">
+                <el-button
+                  size="mini"
+                  :disabled="getReissueDisabled(scope.row)"
+                  type="warning"
+                  @click="reissue(scope.row)"
+                >遗失补发</el-button>
+              </el-row>
             </template>
           </el-table-column>
         </el-table>
@@ -121,12 +130,17 @@
       v-if="dialogReissueVisible"
       title="遗失补发鉴定文书"
       :visible.sync="dialogReissueVisible"
-      width="90%"
-      style="padding:5px 10px;"
+      width="95%"
+      class="DialogStyle"
       :close-on-click-modal="false"
     >
       <ReissueJDWS
         :row="row"
+        :operdm="operdm"
+        :signpicture="signpicture"
+        :signpictureid="signpictureid"
+        :sqdwid="sqdwid"
+        :username="username"
         :reissue-success-call-back="reissueSuccessCallBack"
       />
     </el-dialog>
@@ -144,6 +158,10 @@
         :entrust-id="entrustId"
         :jdzy-id="rowJDZY"
         :lq-status="rowLqStatus"
+        :operdm="operdm"
+        :username="username"
+        :signpicture="signpicture"
+        :signpictureid="signpictureid"
       />
     </el-dialog>
   </div>
@@ -151,9 +169,30 @@
 
 <script>
 function clientGetToken() {
-  //   return client.getToken()
-  return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdnllIiwianRpIjoiMWNlOTBlMmEtNjEwZi00MTI1LWIwZTMtZDM4N2RjZDM3NDhlIiwiaWF0IjoiMjAyMi8xMC8yNyA5OjA5OjIwIiwibmFtZWlkIjoiNzM4IiwibmJmIjoxNjY2ODMyOTYwLCJleHAiOjE2NjY4MzQ3NjAsImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.37GXPGibZAnlIqh_AkQIGC6CuiUlyn2Eufcj0n2nq7c'
+  return client.getToken()
+  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiY2RjODA2MDAtNDg5Ny00OTVlLWFlMmEtZmViY2RlMWNiMDc5IiwiaWF0IjoiMjAyMi8xMC8yOCAxMDowNjozNSIsIm5hbWVpZCI6Ijc3NiIsIm5iZiI6MTY2NjkyMjc5NSwiZXhwIjoxNjY2OTI0NTk1LCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.HobGnk2Bfh4gcpZdKfys-n2ZT0JQ_6Jpby1BAgRIfFc'
 }
+function clientGetOperdm() {
+  return client.getOperdm()
+  // return '776'
+}
+function clientGetUsername() {
+  return client.getRealname()
+  // return '王敏'
+}
+function clientGetSignpicture() {
+  return client.getSignature()
+  // return 'http://192.168.0.88:8040//LHS/UserSign/2022/10/27/6826e2302240c858c78d72c9b44f939e.PNG'
+}
+function clientGetSignpictureid() {
+  return client.getSignatureid()
+  // return '26387'
+}
+function clientGetSqdwid() {
+  return client.getXzdid()
+  // return '6'
+}
+
 import { datePeriodPickerOptions } from '@/utils/tool'
 import { getEntrustList } from '@/api/entrust'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
@@ -208,7 +247,7 @@ export default {
         // 审核状态
         auditStatus: '',
         // 发文状态
-        postStatus: '',
+        postStatus: '1',
         // 授权签字人（复核人）
         authPerson: '',
         // 一审人
@@ -247,26 +286,37 @@ export default {
       rowJDZY: '',
       rowLqStatus: '',
       row: undefined,
-      dialogPrintVisible: false
+      dialogPrintVisible: false,
+      operdm: '',
+      username: '',
+      signpicture: '',
+      signpictureid: '',
+      sqdwid: ''
     }
   },
   created() {
     this.tokentest = clientGetToken()
     var tokentest = this.tokentest
     this.$store.commit('user/SET_TOKEN2', tokentest)
+    this.operdm = clientGetOperdm()
+    this.queryEntrustForm.wt_operdm = this.operdm
+    this.username = clientGetUsername()
+    this.signpicture = clientGetSignpicture()
+    this.signpictureid = clientGetSignpictureid()
+    this.sqdwid = clientGetSqdwid()
     this.getEntrustList()
   },
   methods: {
     // 补发
     reissue: function (row) {
-      this.row = row
-      this.dialogReissueVisible = true
-      // if (row.wt_operdm_one === this.$store.state.user.operdm || row.wt_operdm_two === this.$store.state.user.operdm) {
-      //   this.row = row
-      //   this.dialogReissueVisible = true
-      // } else {
-      //   this.$message.info('您不是该案件的委托人，无权提交补发申请！')
-      // }
+      // this.row = row
+      // this.dialogReissueVisible = true
+      if (row.wt_operdm_one === this.operdm || row.wt_operdm_two === this.operdm) {
+        this.row = row
+        this.dialogReissueVisible = true
+      } else {
+        this.$message.info('您不是该案件的委托人，无权提交补发申请！')
+      }
     },
     reissueSuccessCallBack() {
       this.dialogReissueVisible = false
@@ -303,6 +353,13 @@ export default {
     getPrintDisabled(row) {
       return row.poststatus !== this.$store.getters.POST_STATUS.PASSED
     },
+    getReissueDisabled(row) {
+      if (row.lq_status !== '0') {
+        return row.poststatus !== this.$store.getters.POST_STATUS.PASSED
+      } else {
+        return true
+      }
+    },
     getPrintStatus(row) {
       if (row.lq_status === '0') {
         if (row.poststatus === this.$store.getters.POST_STATUS.PENDING) {
@@ -315,16 +372,15 @@ export default {
       }
     },
     print(row) {
-      // console.log('row.wt_operdm_one', this.$store.state.user.operdm)
-      // if (row.wt_operdm_one === this.$store.state.user.operdm || row.wt_operdm_two === this.$store.state.user.operdm) {
-      this.entrustId = row.wtid
-      this.rowJDZY = row.jdzy
-      this.rowLqStatus = row.lq_status
-      this.row = row
-      this.dialogPrintVisible = true
-      // } else {
-      //   this.$message.info('您不是该案件的委托人，无权查看！')
-      // }
+      if (row.wt_operdm_one === this.operdm || row.wt_operdm_two === this.operdm) {
+        this.entrustId = row.wtid
+        this.rowJDZY = row.jdzy
+        this.rowLqStatus = row.lq_status
+        this.row = row
+        this.dialogPrintVisible = true
+      } else {
+        this.$message.info('您不是该案件的委托人，无权查看！')
+      }
     },
     wtBtnClick(row) {
       console.log('111', row)
@@ -364,7 +420,7 @@ export default {
   padding-top: 0;
 }
 ::v-deep .DialogStyle > .el-dialog .el-dialog__body {
-  padding-top: 0;
+  padding: 0 10px 15px 10px;
 }
 ::v-deep .topCard {
   position: fixed;
@@ -378,12 +434,15 @@ export default {
 .my-card {
   height: 100%;
 }
-::v-deep .el-form-item__label {
+::v-deep .borderStyle .el-form-item__label {
   font-size: 13px;
   font-weight: normal;
   color: #9c9898;
 }
-::v-deep .el-input__inner {
+::v-deep .el-form-item__label {
+  font-size: 13px;
+}
+::v-deep .borderStyle .el-input__inner {
   border: none;
   padding: 0 !important;
   text-align: left;
@@ -391,7 +450,7 @@ export default {
 }
 ::v-deep .el-form-item {
   margin-bottom: 0;
-  padding: 1% 0 0 1%;
+  // padding: 1% 0 0 1%;
 }
 ::v-deep .el-divider--horizontal {
   margin: 12% 0 0 4%;

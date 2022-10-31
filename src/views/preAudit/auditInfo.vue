@@ -96,7 +96,7 @@
 //   // return client.getWtid()
 //   return '3337'
 // }
-import { getEntrustWordDataByEntrustId, updateAuditWt } from '@/api/entrust'
+import { getEntrustWordDataByEntrustId } from '@/api/entrust'
 import { parseTime } from '@/utils/tool'
 export default {
   props: {
@@ -195,7 +195,7 @@ export default {
   margin-top: -10%;
 }
 ::v-deep .el-row .el-col {
-  margin-top: 20px;
+  margin-top: 15px;
 }
 ::v-deep .fixRow .el-col {
   margin-top: 0px;

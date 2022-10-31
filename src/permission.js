@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth' // get token from cookie
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/entrust/audit', '/audit/list', '/caselist', '/samplelist', '/preaudit/ajinfo', '/preaudit/wtinfo', '/preaudit/bdjrinfo'] // no redirect whitelist
+const whiteList = ['/login', '/entrust/audit', '/audit/list', '/caselist', '/samplelist', '/preaudit/ajinfo', '/entrust/wtinfolist', '/identification/apply/list', '/jdws-apply/list', '/look-apply/list'] // no redirect whitelist
 
 router.beforeEach((to, from, next) => {
   // start progress bar

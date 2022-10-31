@@ -103,9 +103,9 @@
               <el-row style="width:126%;text-align:center">
                 <el-button
                   size="mini"
-                  :type="scope.row.status==='3'?'success':'primary'"
+                  type="success"
                   @click="examineApply(scope.row)"
-                >{{ scope.row.status==='3'?'已完成':"待审核" }}
+                >审核
                 </el-button>
               </el-row>
               <div style="font-size:12px;color: #9c9898;margin-top:5px;text-align:center;width:126%">{{ scope.row.classifiedtype==='1'?'文书修改':'文书补发' }}</div>
@@ -126,6 +126,7 @@
         :row="row"
         :is-examine="isExamine"
         :is-edit="true"
+        :iswt="true"
         :operdm="operdm"
         :username="username"
         :signpicture="signpicture"
@@ -145,6 +146,7 @@
         :row="row"
         :is-examine="isExamine"
         :is-reissue="true"
+        :iswt="true"
         :operdm="operdm"
         :username="username"
         :signpicture="signpicture"
@@ -156,6 +158,7 @@
 </template>
 
 <script>
+// 需要传
 function clientGetToken() {
   return client.getToken()
   // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiY2RjODA2MDAtNDg5Ny00OTVlLWFlMmEtZmViY2RlMWNiMDc5IiwiaWF0IjoiMjAyMi8xMC8yOCAxMDowNjozNSIsIm5hbWVpZCI6Ijc3NiIsIm5iZiI6MTY2NjkyMjc5NSwiZXhwIjoxNjY2OTI0NTk1LCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.HobGnk2Bfh4gcpZdKfys-n2ZT0JQ_6Jpby1BAgRIfFc'
@@ -184,8 +187,8 @@ function clientGetSignpictureid() {
 import { datePeriodPickerOptions } from '@/utils/tool'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
 import { acquiremodifyword } from '@/api/word'
-import editJDWS from './apply/components/editJDWS.vue'
-import reissueJDWS from './apply/reissueJDWS.vue'
+import editJDWS from '../apply/components/editJDWS.vue'
+import reissueJDWS from './reissueJDWS.vue'
 
 export default {
   components: { editJDWS, reissueJDWS },
@@ -209,8 +212,7 @@ export default {
         // 每页条数
         pageSize: 10,
         // 当前页数
-        pageIndex: 1,
-        status: '1,2,3'
+        pageIndex: 1
       },
       optionList: {
         entrustPeopleOption: [],

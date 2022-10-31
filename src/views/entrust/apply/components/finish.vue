@@ -5,7 +5,8 @@
       :model="finishForm"
       :rules="rules"
       :label-position="labelPosition"
-      label-width="120px"
+      label-width="102px"
+      size="mini"
     >
       <el-row>
         <el-col :span="24">
@@ -53,34 +54,39 @@
             />
           </el-form-item>
         </el-col>
-        <el-col v-if="row.status!=='4'">
+        <el-col
+          v-if="row.status!=='4'"
+          style="margin-top:8px"
+        >
           <el-row>
-            <el-col
-              :span="4"
-              :offset="10"
-            >
+            <el-col :span="9">
               <el-button
                 type="primary"
                 plain
                 icon="el-icon-edit"
+                size="mini"
                 @click="dialogSignatureVisible=true"
               >审核签名
               </el-button>
             </el-col>
-            <el-col :span="4">
+            <el-col
+              :span="6"
+              style="margin-top:-10px"
+            >
               <el-image :src="finishForm.xgqK_QZ_url">
                 <div
                   slot="error"
                   class="image-slot"
-                  style="display: flex;justify-content: center;align-items: center;margin-top:10px;"
+                  style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
                 >
                   未签名
                 </div>
               </el-image>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="9">
               <el-button
                 type="primary"
+                size="mini"
                 style="width:100%;"
                 @click="submit"
               >提交</el-button>
@@ -103,7 +109,7 @@
     <el-dialog
       title="签名"
       :visible.sync="dialogSignatureVisible"
-      width="644px"
+      width="100%"
       :close-on-click-modal="false"
       append-to-body
       destroy-on-close
@@ -113,6 +119,7 @@
       <Signature
         v-if="dialogSignatureVisible"
         :jdzy-id="row.jdzy"
+        :signpicture="signpicture"
         @on-save="uploadSignatureImage"
         @on-picture="uploadPicture()"
       />
@@ -132,6 +139,9 @@ export default {
   components: { UserSelect, Signature },
   props: {
     row: { type: Object, required: true },
+    operdm: { type: String, require: true, default: '' },
+    signpicture: { type: String, default: '' },
+    signpictureid: { type: String, default: '' },
     finishEditSuccessCallBack: {
       type: Function, default: function (response) {
       }
@@ -147,7 +157,7 @@ export default {
         // 修改情况
         xgqk: undefined,
         // 修改情况人
-        xgqK_OPERDM: this.$store.state.user.operdm,
+        xgqK_OPERDM: this.operdm,
         // 修改情况时间
         xgqK_DATE: new Date(),
         // 修改情况_签字
@@ -185,8 +195,8 @@ export default {
     },
     uploadPicture: function () {
       this.dialogSignatureVisible = false
-      this.finishForm.xgqK_QZ_url = this.$store.state.user.signature
-      this.finishForm.xgqK_QZ = this.$store.state.user.signatureid
+      this.finishForm.xgqK_QZ_url = this.signpicture
+      this.finishForm.xgqK_QZ = this.signpictureid
     },
     uploadSignatureImage(blob) {
       const formData = new FormData()
@@ -230,7 +240,20 @@ export default {
 
 <style scoped
        lang="scss">
-::v-deep .el-input__prefix {
-  display: none !important;
+::v-deep .el-form-item--mini.el-form-item {
+  margin-bottom: 3px;
+}
+::v-deep .el-dialog__body {
+  padding: 0 10px 15px 10px;
+}
+::v-deep .el-dialog__title {
+  font-size: 16px;
+}
+::v-deep .el-dialog__header {
+  padding: 10px 20px 10px;
+}
+::v-deep .el-dialog__headerbtn {
+  top: 2%;
+  font-size: 23px;
 }
 </style>

@@ -5,7 +5,8 @@
       :model="finishForm"
       :rules="rules"
       :label-position="labelPosition"
-      label-width="100px"
+      label-width="102px"
+      size="mini"
     >
       <el-row>
         <el-col :span="24">
@@ -76,7 +77,7 @@
             <el-input
               v-model="finishForm.bfqk"
               type="textarea"
-              :rows="4"
+              :rows="3"
               :value="finishForm.bfqk"
               clearable
               placeholder="请输入补发情况"
@@ -143,6 +144,7 @@
       <Signature
         v-if="dialogSignatureVisible"
         :jdzy-id="row.jdzy"
+        :signpicture="signpicture"
         @on-save="uploadSignatureImage"
         @on-picture="uploadPicture()"
       />
@@ -162,6 +164,9 @@ export default {
   components: { UserSelect, Signature },
   props: {
     row: { type: Object, required: true },
+    operdm: { type: String, require: true, default: '' },
+    signpicture: { type: String, default: '' },
+    signpictureid: { type: String, default: '' },
     finishReissueSuccessCallBack: {
       type: Function, default: function (response) {
       }
@@ -175,13 +180,13 @@ export default {
       labelPosition: 'right',
       finishForm: {
         // 经办人
-        jbr: this.$store.state.user.operdm,
+        jbr: this.operdm,
         // 补发日期
         bF_DATE: new Date(),
         // 补发情况
         bfqk: undefined,
         // 补发情况人
-        bfqK_OPERDM: this.$store.state.user.operdm,
+        bfqK_OPERDM: this.operdm,
         // 补发情况时间
         bfqK_DATE: new Date(),
         // 补发情况_签字
@@ -221,8 +226,8 @@ export default {
     },
     uploadPicture: function () {
       this.dialogSignatureVisible = false
-      this.finishForm.bfqK_QZ_url = this.$store.state.user.signature
-      this.finishForm.bfqK_QZ = this.$store.state.user.signatureid
+      this.finishForm.bfqK_QZ_url = this.signpicture
+      this.finishForm.bfqK_QZ = this.signpictureid
     },
     uploadSignatureImage(blob) {
       const formData = new FormData()
@@ -266,8 +271,11 @@ export default {
 
 <style scoped
        lang="scss">
-::v-deep .el-input__prefix {
+/* ::v-deep .el-input__prefix {
   display: none !important;
+} */
+::v-deep .el-form-item--mini.el-form-item {
+  margin-bottom: 3px;
 }
 </style>
 
