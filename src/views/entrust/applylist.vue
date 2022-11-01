@@ -91,6 +91,7 @@
           <el-table-column width="180">
             <template slot-scope="scope">
               <div style="font-size:15px;margin-bottom:5px">{{ scope.row.ajname }}</div>
+              <div style="font-size:12px;color: #9c9898;margin-top:-5px">申请人 <span style="color: #6e6c6c;">{{ scope.row.sqrname }}</span></div>
               <div style="font-size:12px;color: #9c9898;margin-top:-5px">申请时间</div>
               <div class="timeClass">{{ scope.row.sq_date }}</div>
               <div style="font-size:12px;color: #9c9898;">状态</div>
@@ -99,13 +100,25 @@
           </el-table-column>
           <el-table-column>
             <template slot-scope="scope">
-              <div class="rightInfo">申请人&nbsp;{{ scope.row.sqrname }}</div>
+              <!-- <div class="rightInfo">申请人&nbsp;{{ scope.row.sqrname }}</div> -->
               <el-row style="width:126%;text-align:center">
                 <el-button
                   size="mini"
-                  :type="scope.row.status==='3'?'success':'primary'"
+                  style="width:57%"
+                  :disabled="parseInt(scope.row.status)<0 "
+                  :type="getType(scope.row)"
                   @click="examineApply(scope.row)"
-                >{{ scope.row.status==='3'?'已完成':"待审核" }}
+                >{{ getShText(scope.row) }}
+                </el-button>
+              </el-row>
+              <el-row style="width:126%;text-align:center;margin-top:5px">
+                <el-button
+                  :disabled="parseInt(scope.row.status)>=0 "
+                  size="mini"
+                  style="width:57%"
+                  type="warning"
+                  @click="sendMessage(scope.row)"
+                >短信通知
                 </el-button>
               </el-row>
               <div style="font-size:12px;color: #9c9898;margin-top:5px;text-align:center;width:126%">{{ scope.row.classifiedtype==='1'?'文书修改':'文书补发' }}</div>
@@ -158,24 +171,20 @@
 <script>
 function clientGetToken() {
   return client.getToken()
-  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiY2RjODA2MDAtNDg5Ny00OTVlLWFlMmEtZmViY2RlMWNiMDc5IiwiaWF0IjoiMjAyMi8xMC8yOCAxMDowNjozNSIsIm5hbWVpZCI6Ijc3NiIsIm5iZiI6MTY2NjkyMjc5NSwiZXhwIjoxNjY2OTI0NTk1LCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.HobGnk2Bfh4gcpZdKfys-n2ZT0JQ_6Jpby1BAgRIfFc'
+  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiOTE5Y2MzMjYtM2FmYy00ZDJkLTkyZjUtYWY2OTVlM2VjMDlhIiwiaWF0IjoiMjAyMi8xMS8xIDg6MzY6NDIiLCJuYW1laWQiOiI3NzYiLCJuYmYiOjE2NjcyNjMwMDIsImV4cCI6MTY2NzI2NDgwMiwiaXNzIjoiand0X3VzZXIiLCJhdWQiOiJqd3RfYXVkaWVuY2UifQ.m2BcylQNtPLZ9C7x10rTMjnaOgAxc7j-r29y0zQBAWM'
 }
-// 需要传
 function clientGetOperdm() {
   return client.getOperdm()
   // return '776'
 }
-// 需要传
 function clientGetUsername() {
   return client.getRealname()
   // return '王敏'
 }
-// 需要传
 function clientGetSignpicture() {
   return client.getSignature()
   // return 'http://192.168.0.88:8040//LHS/UserSign/2022/10/27/6826e2302240c858c78d72c9b44f939e.PNG'
 }
-// 需要传
 function clientGetSignpictureid() {
   return client.getSignatureid()
   // return '26387'
@@ -183,7 +192,7 @@ function clientGetSignpictureid() {
 
 import { datePeriodPickerOptions } from '@/utils/tool'
 import elTableInfiniteScroll from 'el-table-infinite-scroll'
-import { acquiremodifyword } from '@/api/word'
+import { acquiremodifyword, sendsms_modifyword } from '@/api/word'
 import editJDWS from './apply/components/editJDWS.vue'
 import reissueJDWS from './apply/reissueJDWS.vue'
 
@@ -210,7 +219,9 @@ export default {
         pageSize: 10,
         // 当前页数
         pageIndex: 1,
-        status: '1,2,3'
+        // 默认是委托方领导已审核、鉴定中心授权人已审核
+        status: ['1', '2', '-2', '-3']
+        // status: ['1', '2']
       },
       optionList: {
         entrustPeopleOption: [],
@@ -220,8 +231,7 @@ export default {
         }, {
           value: '2',
           label: '文书补发'
-        }
-        ]
+        }]
       },
       pickerOptions: datePeriodPickerOptions,
       isExamine: false,
@@ -238,17 +248,67 @@ export default {
     var tokentest = this.tokentest
     this.$store.commit('user/SET_TOKEN2', tokentest)
     this.operdm = clientGetOperdm()
-    this.queryApplyForm.sqr = this.operdm
+    // this.queryApplyForm.sqr = this.operdm
     this.username = clientGetUsername()
     this.signpicture = clientGetSignpicture()
     this.signpictureid = clientGetSignpictureid()
     this.getApplyList()
   },
   methods: {
+    tableRowClassName({ row, rowIndex }) {
+      const a = parseInt(row.status)
+      if (a < 0) {
+        console.log(rowIndex)
+        return 'warning-row'
+      } else {
+        return ''
+      }
+    },
+    getShText: function (row) {
+      if (row.status === '3' || row.status === '4') {
+        return '已通过'
+      } else {
+        return parseInt(row.status) < 0 ? '不通过' : '待审核'
+      }
+    },
+    getType: function (row) {
+      if (row.status === '3' || row.status === '4') {
+        return 'success'
+      } else {
+        return parseInt(row.status) < 0 ? 'danger' : 'primary'
+      }
+    },
+    // 短信通知
+    sendMessage: function (row) {
+      this.$confirm('是否短信通知申请人,提交的审核不予通过?', '提示', {
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        type: 'warning'
+      }).then(() => {
+        sendsms_modifyword(row.id).then(response => {
+          this.$message.success('通知成功！')
+          this.getApplyList()
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        })
+      })
+    },
     // 获取委托表格数据
     getApplyList() {
       this.tableLoading = true
-      acquiremodifyword(this.queryApplyForm).then(response => {
+      const temp = {
+        sqr: this.queryApplyForm.sqr,
+        posT_XH: this.queryApplyForm.posT_XH,
+        SQDATE: this.queryApplyForm.SQDATE,
+        classifiedType: this.queryApplyForm.classifiedType,
+        pageSize: this.queryApplyForm.pageSize,
+        pageIndex: this.queryApplyForm.pageIndex,
+        status: this.queryApplyForm.status.join(',')
+      }
+      acquiremodifyword(temp).then(response => {
         this.applyTableData = this.applyTableData.concat(response.data.rows)
         this.totalPage = Math.ceil(response.data.total / 10)
         this.tableLoading = false
@@ -261,11 +321,17 @@ export default {
       } else if (status === '1') {
         return '委托方领导已审核'
       } else if (status === '2') {
-        return '鉴定中心授权人确认'
+        return '鉴定中心授权人已审核'
       } else if (status === '3') {
         return '鉴定中心领导已审核'
       } else if (status === '4') {
         return '检验人完成'
+      } else if (status === '-1') {
+        return '委托方领导不予通过'
+      } else if (status === '-2') {
+        return '鉴定中心授权人不予通过'
+      } else if (status === '-3') {
+        return '鉴定中心领导不予通过'
       } else {
         return '未知状态'
       }

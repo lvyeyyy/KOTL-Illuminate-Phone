@@ -83,7 +83,7 @@ export default {
     // 笔签
     this.init(true)
     // 鼠标签
-    this.init(false)
+    // this.init(false)
   },
   created() {
     this.isFourAuditor = false
@@ -117,22 +117,22 @@ export default {
       }
     },
     signaturePhoto() {
-      this.$confirm('此操作将使用系统中个人中心的签字图片, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        if (this.signpicture === '' || this.signpicture === undefined) {
-          this.$message.info('个人中心中没有签字图片，请先上传！')
-        } else {
-          this.$emit('on-picture', true)
-        }
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消'
-        })
-      })
+      // this.$confirm('此操作将使用系统中个人中心的签字图片, 是否继续?', '提示', {
+      //   confirmButtonText: '确定',
+      //   cancelButtonText: '取消',
+      //   type: 'warning'
+      // }).then(() => {
+      if (this.signpicture === '' || this.signpicture === undefined) {
+        this.$message.info('个人中心中没有签字图片，请先上传！')
+      } else {
+        this.$emit('on-picture', true)
+      }
+      // }).catch(() => {
+      //   this.$message({
+      //     type: 'info',
+      //     message: '已取消'
+      //   })
+      // })
     },
     checkAppUserInited() {
       return new Promise((resolve, reject) => {

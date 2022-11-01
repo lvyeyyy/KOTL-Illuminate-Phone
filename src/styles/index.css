@@ -341,6 +341,22 @@ div:focus {
   height: 0;
 }
 
+.el-table .warning-row {
+  background: #fde6e6;
+}
+
+.el-table .info-row {
+  background: #EBEEF5;
+}
+
+.el-table .demotion-row {
+  background: oldlace;
+}
+
+.el-table .success-row {
+  background: #e7fde6;
+}
+
 .app-container {
   padding: 20px;
 }

@@ -71,16 +71,16 @@ export const constantRoutes = [
     meta: { title: '补发/修改', icon: 'audit' }
   },
   {
-    path: '/identification/apply/list',
-    name: 'identification-apply-list',
-    component: () => import('../views/entrust/apply/index'),
-    meta: { title: '补发/修改操作列表', icon: 'audit' }
-  },
-  {
     path: '/jdws-apply/list',
     name: 'jdws-apply-list',
     component: () => import('../views/entrust/applylist'),
     meta: { title: '补发/修改申请列表', icon: 'audit' }
+  },
+  {
+    path: '/identification/apply/list',
+    name: 'identification-apply-list',
+    component: () => import('../views/entrust/apply/index'),
+    meta: { title: '补发/修改操作列表', icon: 'audit' }
   }
   // {
   //   path: '/entrust/ajinfo',

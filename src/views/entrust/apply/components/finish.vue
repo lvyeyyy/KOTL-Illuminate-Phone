@@ -154,6 +154,8 @@ export default {
       // 表单标签位置
       labelPosition: 'right',
       finishForm: {
+        // 委托id
+        wtid: this.row.wtid,
         // 修改情况
         xgqk: undefined,
         // 修改情况人

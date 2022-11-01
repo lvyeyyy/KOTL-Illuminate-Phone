@@ -28,9 +28,33 @@
         </el-col>
       </el-row>
     </el-row>
+    <el-row v-else>
+      <el-col
+        :span="11"
+        :offset="11"
+      >
+        <el-button
+          v-if="row.poststatus===$store.getters.POST_STATUS.PASSED"
+          style="width:100%;margin-left:10px"
+          type="primary"
+          size="mini"
+          @click="editJDWS"
+        >修改鉴定文书</el-button>
+      </el-col>
+    </el-row>
     <el-row>
-      <el-col :span="24">
-        <div id="pdfdemo" />
+      <el-col
+        :span="24"
+        style="height:calc(100vh - 100px);overflow-y:scroll"
+      >
+        <!-- <div id="pdfdemo" /> -->
+        <Pdf
+          v-for="i in numPages"
+          :key="i"
+          :src="pdfList"
+          :page="i"
+          style="margin-top:3px;box-shadow: 0px 0px 3px 0 rgba(0, 0, 0, 0.2);"
+        />
       </el-col>
     </el-row>
     <el-dialog
@@ -73,14 +97,16 @@
 </template>
 
 <script>
-import Pdfh5 from 'pdfh5'
-import 'pdfh5/css/pdfh5.css'
-import { queryDocument, uploadImage, updatelq } from '@/api/entrust'
+// import Pdfh5 from 'pdfh5'
+// import 'pdfh5/css/pdfh5.css'
+import Pdf from 'vue-pdf'
+import { uploadImage, updatelq } from '@/api/entrust'
+import { getdocumentbywslb } from '@/api/word'
 import Signature from '@/components/Signature/PhoneIndex'
 import editJDWS from './components/editJDWS.vue'
 
 export default {
-  components: { Signature, editJDWS },
+  components: { Signature, editJDWS, Pdf },
   props: {
     entrustId: { type: String, require: true, default: undefined },
     jdzyId: { type: String, require: true, default: undefined },
@@ -93,44 +119,94 @@ export default {
   },
   data() {
     return {
-      pdfh5: null,
-      pdfList: [],
+      // pdfh5: null,
+      numPages: 1,
+      pdfList: '',
       isShow: false,
       dialogSignatureVisible: false,
       dialogEditJDWSVisible: false
     }
   },
   created() {
-    this.queryDocument()
+    // this.queryDocument()
+    this.getdocumentbywslb()
   },
   methods: {
     // 查询检验报告
-    queryDocument() {
+    getdocumentbywslb: function () {
       this.isShow = true
-      queryDocument(this.entrustId, this.$store.getters.DOCUMENT_STEP.AUDIT).then(response => {
+      getdocumentbywslb(this.entrustId, '鉴定文书,检验记录', '0').then(response => {
         let temp = []
         this.pdfList = []
         if (response.data.length !== 0) {
           temp = response.data
+          let edit_num = 0
           let index = 0
           for (let i = 0; i < temp.length; i++) {
             if (temp[i].type === '鉴定文书') {
-              if (temp[i].editioN_NUM > index) {
+              if (temp[i].editioN_NUM === 0) {
                 index = i
+                edit_num = temp[i].editioN_NUM
+              } else {
+                if (temp[i].editioN_NUM > edit_num) {
+                  index = i
+                }
               }
             }
           }
           this.pdfList = (temp[index].url + '#toolbar=0')
-          //  实例化
-          this.pdfh5 = new Pdfh5('#pdfdemo', {
-            zoomEnable: true,
-            tapZoomFactor: 1.5,
-            pdfurl: this.pdfList// 这里就是pdf的路径
+          const src = Pdf.createLoadingTask(this.pdfList)
+          src.promise.then(pdf => {
+            this.numPages = pdf.numPages
+            // console.log(pdf.numPages)
           })
+          // this.$nextTick(() => {
+          //   //  实例化
+          //   this.pdfh5 = new Pdfh5('#pdfdemo', {
+          //     zoomEnable: true,
+          //     tapZoomFactor: 1.5,
+          //     pdfurl: this.pdfList// 这里就是pdf的路径
+          //   })
+          // })
           this.isShow = false
         }
       })
     },
+    // 查询检验报告
+    // queryDocument() {
+    //   this.isShow = true
+    //   queryDocument(this.entrustId, this.$store.getters.DOCUMENT_STEP.AUDIT).then(response => {
+    //     let temp = []
+    //     this.pdfList = []
+    //     if (response.data.length !== 0) {
+    //       temp = response.data
+    //       let edit_num = 0
+    //       let index = 0
+    //       for (let i = 0; i < temp.length; i++) {
+    //         if (temp[i].type === '鉴定文书') {
+    //           if (temp[i].editioN_NUM === 0) {
+    //             index = i
+    //             edit_num = temp[i].editioN_NUM
+    //           } else {
+    //             if (temp[i].editioN_NUM > edit_num) {
+    //               index = i
+    //             }
+    //           }
+    //         }
+    //         this.pdfList = (temp[index].url + '#toolbar=0')
+    //         this.isShow = false
+    //       }
+    //       this.$nextTick(() => {
+    //         //  实例化
+    //         this.pdfh5 = new Pdfh5('#pdfdemo', {
+    //           zoomEnable: true,
+    //           tapZoomFactor: 1.5,
+    //           pdfurl: this.pdfList// 这里就是pdf的路径
+    //         })
+    //       })
+    //     }
+    //   })
+    // },
     receive() {
       this.dialogSignatureVisible = true
     },

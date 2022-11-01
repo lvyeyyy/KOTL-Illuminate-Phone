@@ -115,6 +115,20 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row v-if="parseInt(row.status)<0 ">
+        <span
+          v-if="row.status==='-1'"
+          style="color:red;font-size:12px"
+        >委托方领导不予通过,不通过意见：{{ row.sqdwyj }}</span>
+        <span
+          v-if="row.status==='-2'"
+          style="color:red;font-size:12px"
+        >室负责人不予通过,不通过意见：{{ row.szryj }}</span>
+        <span
+          v-if="row.status==='-3'"
+          style="color:red;font-size:12px"
+        >中心领导不予通过,不通过意见：{{ row.zxldyj }}</span>
+      </el-row>
       <el-row v-if="(row.status==='0' && !isExamine) || row.status==='已发文'">
         <el-col
           :span="8"
@@ -168,7 +182,7 @@
             <div
               slot="error"
               class="image-slot"
-              style="display: flex;justify-content: center;align-items: center;font-size:13px"
+              style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
             >
               未签名
             </div>
@@ -176,7 +190,20 @@
         </el-col>
         <el-col
           v-if="row.status==='0' || !iswt"
-          :span="9"
+          :span="12"
+          style="margin-top:8px"
+        >
+          <el-button
+            size="mini"
+            type="danger"
+            @click="NoAdopt"
+          >
+            不通过
+          </el-button>
+        </el-col>
+        <el-col
+          v-if="row.status==='0' || !iswt"
+          :span="12"
           style="margin-top:8px"
         >
           <el-button
@@ -194,7 +221,10 @@
       >
         <el-divider />
         <el-col :span="24">
-          <el-form-item label="室负责人意见">
+          <el-form-item
+            label="室负责人意见"
+            label-width="92px"
+          >
             <el-input
               v-model="reissueJDWSForm.szryj"
               type="textarea"
@@ -226,7 +256,7 @@
             <div
               slot="error"
               class="image-slot"
-              style="display: flex;justify-content: center;align-items: center;font-size:13px"
+              style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
             >
               未签名
             </div>
@@ -234,7 +264,20 @@
         </el-col>
         <el-col
           v-if="row.status==='0' || !iswt"
-          :span="9"
+          :span="12"
+          style="margin-top:8px"
+        >
+          <el-button
+            size="mini"
+            type="danger"
+            @click="NoAdopt"
+          >
+            不通过
+          </el-button>
+        </el-col>
+        <el-col
+          v-if="row.status==='0' || !iswt"
+          :span="12"
           style="margin-top:8px"
         >
           <el-button
@@ -252,7 +295,10 @@
       >
         <el-divider />
         <el-col :span="24">
-          <el-form-item label="中心领导意见">
+          <el-form-item
+            label="中心领导意见"
+            label-width="92px"
+          >
             <el-input
               v-model="reissueJDWSForm.zxldyj"
               type="textarea"
@@ -284,7 +330,7 @@
             <div
               slot="error"
               class="image-slot"
-              style="display: flex;justify-content: center;align-items: center;font-size:13px"
+              style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
             >
               未签名
             </div>
@@ -292,7 +338,20 @@
         </el-col>
         <el-col
           v-if="row.status==='0' || !iswt"
-          :span="9"
+          :span="12"
+          style="margin-top:8px"
+        >
+          <el-button
+            size="mini"
+            type="danger"
+            @click="NoAdopt"
+          >
+            不通过
+          </el-button>
+        </el-col>
+        <el-col
+          v-if="row.status==='0' || !iswt"
+          :span="12"
           style="margin-top:8px"
         >
           <el-button
@@ -308,6 +367,7 @@
         title="签名"
         :visible.sync="dialogSignatureVisible"
         :close-on-click-modal="false"
+        width="100%"
         append-to-body
         destroy-on-close
         @opened="isShowEntrustSignature=true"
@@ -326,10 +386,10 @@
 </template>
 
 <script>
-import { add_modifyword, update_modifyword } from '@/api/word'
+import { add_modifyword, update_modifyword, notpass_modifyword } from '@/api/word'
 import { getAllUnitSelectOption } from '@/api/selectOption'
 import Signature from '@/components/Signature/PhoneIndex.vue'
-import { uploadImage } from '@/api/entrust'
+import { uploadImage, getjdwsbh } from '@/api/entrust'
 
 export default {
   components: { Signature },
@@ -351,6 +411,7 @@ export default {
   },
   data: function () {
     return {
+      checked: false,
       dialogSignatureVisible: false,
       isShowEntrustSignature: false,
       pickerOptions: {
@@ -394,7 +455,7 @@ export default {
         // 鉴定文书编号
         jdwsbh: undefined,
         // 鉴定文书名称
-        jdwsmc: '',
+        jdwsmc: '鉴定文书',
         // 申请事由
         sqsy: '',
         // 申请单位意见
@@ -460,9 +521,17 @@ export default {
         this.reissueJDWSForm.sqdwyj = this.row.sqdwyj
         this.reissueJDWSForm.sqdwyJ_QZ_url = this.row.sqbmyj_qz_url
       }
+    } else {
+      this.getjdwsbh()
     }
   },
   methods: {
+    // 查询文书编号
+    getjdwsbh: function () {
+      getjdwsbh(this.row.wtid).then(response => {
+        this.reissueJDWSForm.jdwsbh = response.data
+      })
+    },
     uploadSignatureImage(blob) {
       const formData = new FormData()
       formData.append('file', blob)
@@ -493,6 +562,7 @@ export default {
         this.reissueJDWSForm.zxldyJ_QZ = this.signpictureid
       }
     },
+    // 通过
     adopt: function () {
       if (this.step === '0') {
         if (this.reissueJDWSForm.sqdwyJ_QZ === '' || this.reissueJDWSForm.sqdwyJ_QZ === undefined) {
@@ -554,6 +624,70 @@ export default {
             this.reissueJDWSForm.zxldyJ_DATE = new Date()
             update_modifyword(this.reissueJDWSForm).then(response => {
               this.$message.success('审核成功！')
+              this.reissueSuccessCallBack()
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消'
+            })
+          })
+        }
+      }
+    },
+    // 不通过
+    NoAdopt: function () {
+      if (this.step === '0') {
+        if (this.reissueJDWSForm.sqdwyj === '' || this.reissueJDWSForm.sqdwyj === undefined) {
+          this.$message.info('请输入意见！')
+        } else {
+          this.$confirm('是否不通过审核?', '提示', {
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            type: 'warning'
+          }).then(() => {
+            notpass_modifyword(this.row.id, this.row.status, this.reissueJDWSForm.sqdwyj, '0').then(response => {
+              this.$message.success('操作成功！')
+              this.reissueSuccessCallBack()
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消'
+            })
+          })
+        }
+      } else if (this.step === '1') {
+        if (this.reissueJDWSForm.szryj === '' || this.reissueJDWSForm.szryj === undefined) {
+          this.$message.info('请输入意见！')
+        } else {
+          this.$confirm('是否不通过审核?', '提示', {
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            type: 'warning'
+          }).then(() => {
+            notpass_modifyword(this.row.id, this.row.status, this.reissueJDWSForm.szryj, '0').then(response => {
+              this.$message.success('操作成功！')
+              this.reissueSuccessCallBack()
+            })
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消'
+            })
+          })
+        }
+      } else if (this.step === '2') {
+        if (this.reissueJDWSForm.zxldyj === '' || this.reissueJDWSForm.zxldyj === undefined) {
+          this.$message.info('请输入意见！')
+        } else {
+          this.$confirm('是否不通过审核?', '提示', {
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            type: 'warning'
+          }).then(() => {
+            notpass_modifyword(this.row.id, this.row.status, this.reissueJDWSForm.zxldyj, '0').then(response => {
+              this.$message.success('操作成功！')
               this.reissueSuccessCallBack()
             })
           }).catch(() => {

@@ -47,7 +47,7 @@
                     end-placeholder="结束日期"
                     align="center"
                     size="mini"
-                    style="width: 100%"
+                    style="width: 107%"
                     @focus="elDatePickerOnFocus"
                   />
                 </el-form-item>
@@ -108,6 +108,7 @@
               <el-row style="width:126%;text-align:center">
                 <el-button
                   size="mini"
+                  style="width:57%"
                   :disabled="getPrintDisabled(scope.row)"
                   :type="getPrintStatus(scope.row)"
                   @click="print(scope.row)"
@@ -116,6 +117,7 @@
               <el-row style="width:126%;text-align:center;margin-top:5px">
                 <el-button
                   size="mini"
+                  style="width:57%"
                   :disabled="getReissueDisabled(scope.row)"
                   type="warning"
                   @click="reissue(scope.row)"
@@ -150,8 +152,9 @@
       :visible.sync="dialogPrintVisible"
       width="98%"
       class="DialogStyle"
-      top="10px"
+      top="12px"
       :close-on-click-modal="false"
+      @close="closeDialog"
     >
       <LookJYBG
         :row="row"
@@ -170,7 +173,7 @@
 <script>
 function clientGetToken() {
   return client.getToken()
-  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiY2RjODA2MDAtNDg5Ny00OTVlLWFlMmEtZmViY2RlMWNiMDc5IiwiaWF0IjoiMjAyMi8xMC8yOCAxMDowNjozNSIsIm5hbWVpZCI6Ijc3NiIsIm5iZiI6MTY2NjkyMjc5NSwiZXhwIjoxNjY2OTI0NTk1LCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.HobGnk2Bfh4gcpZdKfys-n2ZT0JQ_6Jpby1BAgRIfFc'
+  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiOTE5Y2MzMjYtM2FmYy00ZDJkLTkyZjUtYWY2OTVlM2VjMDlhIiwiaWF0IjoiMjAyMi8xMS8xIDg6MzY6NDIiLCJuYW1laWQiOiI3NzYiLCJuYmYiOjE2NjcyNjMwMDIsImV4cCI6MTY2NzI2NDgwMiwiaXNzIjoiand0X3VzZXIiLCJhdWQiOiJqd3RfYXVkaWVuY2UifQ.m2BcylQNtPLZ9C7x10rTMjnaOgAxc7j-r29y0zQBAWM'
 }
 function clientGetOperdm() {
   return client.getOperdm()
@@ -382,6 +385,10 @@ export default {
         this.$message.info('您不是该案件的委托人，无权查看！')
       }
     },
+    closeDialog() {
+      this.entrustTableData = []
+      this.getEntrustList()
+    },
     wtBtnClick(row) {
       console.log('111', row)
       //  跳到案件信息页面 传ajid
@@ -472,9 +479,14 @@ export default {
 ::v-deep .el-dialog__body {
   padding: 20px;
 }
+::v-deep .el-dialog {
+  position: relative;
+}
 ::v-deep .el-dialog__headerbtn {
-  top: 2%;
+  // top: 1%;
+  margin-top: -3%;
   font-size: 23px;
+  position: absolute;
 }
 </style>
 <style lang="scss">

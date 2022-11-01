@@ -87,18 +87,22 @@
         <el-col v-if="row.status!=='4'">
           <el-row>
             <el-col
-              :span="4"
-              :offset="10"
+              :span="10"
+              style="margin-top:8px"
             >
               <el-button
                 type="primary"
                 plain
+                size="mini"
                 icon="el-icon-edit"
                 @click="dialogSignatureVisible=true"
               >审核签名
               </el-button>
             </el-col>
-            <el-col :span="4">
+            <el-col
+              :span="5"
+              style="margin-top:8px"
+            >
               <el-image :src="finishForm.bfqK_QZ_url">
                 <div
                   slot="error"
@@ -109,8 +113,12 @@
                 </div>
               </el-image>
             </el-col>
-            <el-col :span="6">
+            <el-col
+              :span="9"
+              style="margin-top:8px"
+            >
               <el-button
+                size="mini"
                 type="primary"
                 style="width:100%;"
                 @click="submit"
@@ -134,7 +142,7 @@
     <el-dialog
       title="签名"
       :visible.sync="dialogSignatureVisible"
-      width="644px"
+      width="100%"
       :close-on-click-modal="false"
       append-to-body
       destroy-on-close
@@ -179,6 +187,8 @@ export default {
       // 表单标签位置
       labelPosition: 'right',
       finishForm: {
+        // 委托id
+        wtid: this.row.wtid,
         // 经办人
         jbr: this.operdm,
         // 补发日期

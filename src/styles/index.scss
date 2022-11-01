@@ -59,6 +59,22 @@ div:focus {
   }
 }
 
+.el-table .warning-row {
+  background: rgb(253, 230, 230);
+}
+
+.el-table .info-row {
+  background: #EBEEF5;
+}
+
+.el-table .demotion-row {
+  background: oldlace;
+}
+
+.el-table .success-row {
+  background: rgb(231, 253, 230);
+}
+
 // main-container global css
 .app-container {
   padding: 20px;

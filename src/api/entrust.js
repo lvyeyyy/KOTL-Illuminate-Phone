@@ -268,9 +268,21 @@ export function addSample(data) {
  * @returns {Promise}
  */
 export function updatelq(data) {
-    return request({
-        url: '/wthandler/updatelq',
-        method: 'post',
-        data
-    })
+  return request({
+    url: '/wthandler/updatelq',
+    method: 'post',
+    data
+  })
+}
+/**
+ * 获取鉴定文书编号
+ * @param entrustId
+ * @returns {Promise}
+ */
+export function getjdwsbh(entrustId) {
+  return request({
+    url: '/wthandler/getjdwsbh',
+    method: 'post',
+    params: { wtid: entrustId }
+  })
 }
