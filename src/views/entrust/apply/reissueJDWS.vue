@@ -161,59 +161,62 @@
             />
           </el-form-item>
         </el-col>
-        <el-col
-          :span="10"
-          style="margin-top:8px"
-        >
-          <el-button
-            type="primary"
-            plain
-            size="mini"
-            icon="el-icon-edit"
-            @click="dialogSignatureVisible=true"
-          >审核签名
-          </el-button>
-        </el-col>
-        <el-col
-          :span="5"
-          style="margin-top:8px"
-        >
-          <el-image :src="reissueJDWSForm.sqdwyJ_QZ_url">
-            <div
-              slot="error"
-              class="image-slot"
-              style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
+        <el-row>
+          <el-col
+            :span="9"
+            style="margin-top:8px"
+          >
+            <el-button
+              type="primary"
+              plain
+              size="mini"
+              icon="el-icon-edit"
+              style="margin-left:5%"
+              @click="dialogSignatureVisible=true"
+            >审核签名
+            </el-button>
+          </el-col>
+          <el-col
+            :span="5"
+            style="margin-left:5%"
+          >
+            <el-image :src="reissueJDWSForm.sqdwyJ_QZ_url">
+              <div
+                slot="error"
+                class="image-slot"
+                style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
+              >
+                未签名
+              </div>
+            </el-image>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top:8px;display:flex;justify-content: space-between;">
+          <el-col
+            v-if="row.status==='0' || !iswt"
+            :span="11"
+          >
+            <el-button
+              size="mini"
+              type="danger"
+              @click="NoAdopt"
             >
-              未签名
-            </div>
-          </el-image>
-        </el-col>
-        <el-col
-          v-if="row.status==='0' || !iswt"
-          :span="12"
-          style="margin-top:8px"
-        >
-          <el-button
-            size="mini"
-            type="danger"
-            @click="NoAdopt"
+              不通过
+            </el-button>
+          </el-col>
+          <el-col
+            v-if="row.status==='0' || !iswt"
+            :span="11"
           >
-            不通过
-          </el-button>
-        </el-col>
-        <el-col
-          v-if="row.status==='0' || !iswt"
-          :span="12"
-          style="margin-top:8px"
-        >
-          <el-button
-            type="success"
-            size="mini"
-            @click="adopt"
-          >
-            通过
-          </el-button>
-        </el-col>
+            <el-button
+              type="success"
+              size="mini"
+              @click="adopt"
+            >
+              通过
+            </el-button>
+          </el-col>
+        </el-row>
       </el-row>
       <el-row
         v-if="isExamine && step==='1'&& !iswt"
@@ -235,59 +238,62 @@
             />
           </el-form-item>
         </el-col>
-        <el-col
-          :span="10"
-          style="margin-top:8px"
-        >
-          <el-button
-            type="primary"
-            plain
-            icon="el-icon-edit"
-            size="mini"
-            @click="dialogSignatureVisible=true"
-          >审核签名
-          </el-button>
-        </el-col>
-        <el-col
-          :span="5"
-          style="margin-top:8px"
-        >
-          <el-image :src="reissueJDWSForm.szryJ_QZ_url">
-            <div
-              slot="error"
-              class="image-slot"
-              style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
+        <el-row>
+          <el-col
+            :span="9"
+            style="margin-top:8px"
+          >
+            <el-button
+              type="primary"
+              plain
+              icon="el-icon-edit"
+              size="mini"
+              style="margin-left:5%"
+              @click="dialogSignatureVisible=true"
+            >审核签名
+            </el-button>
+          </el-col>
+          <el-col
+            :span="5"
+            style="margin-left:5%"
+          >
+            <el-image :src="reissueJDWSForm.szryJ_QZ_url">
+              <div
+                slot="error"
+                class="image-slot"
+                style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
+              >
+                未签名
+              </div>
+            </el-image>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top:8px;display:flex;justify-content: space-between;">
+          <el-col
+            v-if="row.status==='0' || !iswt"
+            :span="11"
+          >
+            <el-button
+              size="mini"
+              type="danger"
+              @click="NoAdopt"
             >
-              未签名
-            </div>
-          </el-image>
-        </el-col>
-        <el-col
-          v-if="row.status==='0' || !iswt"
-          :span="12"
-          style="margin-top:8px"
-        >
-          <el-button
-            size="mini"
-            type="danger"
-            @click="NoAdopt"
+              不通过
+            </el-button>
+          </el-col>
+          <el-col
+            v-if="row.status==='0' || !iswt"
+            :span="11"
           >
-            不通过
-          </el-button>
-        </el-col>
-        <el-col
-          v-if="row.status==='0' || !iswt"
-          :span="12"
-          style="margin-top:8px"
-        >
-          <el-button
-            size="mini"
-            type="success"
-            @click="adopt"
-          >
-            通过
-          </el-button>
-        </el-col>
+            <el-button
+              size="mini"
+              type="success"
+              @click="adopt"
+            >
+              通过
+            </el-button>
+          </el-col>
+        </el-row>
       </el-row>
       <el-row
         v-if="isExamine && step==='2'&& !iswt"
@@ -309,59 +315,62 @@
             />
           </el-form-item>
         </el-col>
-        <el-col
-          :span="10"
-          style="margin-top:8px"
-        >
-          <el-button
-            type="primary"
-            plain
-            size="mini"
-            icon="el-icon-edit"
-            @click="dialogSignatureVisible=true"
-          >审核签名
-          </el-button>
-        </el-col>
-        <el-col
-          :span="5"
-          style="margin-top:8px"
-        >
-          <el-image :src="reissueJDWSForm.zxldyJ_QZ_url">
-            <div
-              slot="error"
-              class="image-slot"
-              style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
+        <el-row>
+          <el-col
+            :span="10"
+            style="margin-top:8px"
+          >
+            <el-button
+              type="primary"
+              plain
+              size="mini"
+              icon="el-icon-edit"
+              style="margin-left:5%"
+              @click="dialogSignatureVisible=true"
+            >审核签名
+            </el-button>
+          </el-col>
+          <el-col
+            :span="5"
+            style="margin-left:5%"
+          >
+            <el-image :src="reissueJDWSForm.zxldyJ_QZ_url">
+              <div
+                slot="error"
+                class="image-slot"
+                style="display: flex;justify-content: center;align-items: center;margin-top:15px;font-size:13px"
+              >
+                未签名
+              </div>
+            </el-image>
+          </el-col>
+        </el-row>
+        <el-row style="margin-top:8px;display:flex;justify-content: space-between;">
+          <el-col
+            v-if="row.status==='0' || !iswt"
+            :span="11"
+          >
+            <el-button
+              size="mini"
+              type="danger"
+              @click="NoAdopt"
             >
-              未签名
-            </div>
-          </el-image>
-        </el-col>
-        <el-col
-          v-if="row.status==='0' || !iswt"
-          :span="12"
-          style="margin-top:8px"
-        >
-          <el-button
-            size="mini"
-            type="danger"
-            @click="NoAdopt"
+              不通过
+            </el-button>
+          </el-col>
+          <el-col
+            v-if="row.status==='0' || !iswt"
+            :span="11"
           >
-            不通过
-          </el-button>
-        </el-col>
-        <el-col
-          v-if="row.status==='0' || !iswt"
-          :span="12"
-          style="margin-top:8px"
-        >
-          <el-button
-            size="mini"
-            type="success"
-            @click="adopt"
-          >
-            通过
-          </el-button>
-        </el-col>
+            <el-button
+              size="mini"
+              type="success"
+              @click="adopt"
+            >
+              通过
+            </el-button>
+          </el-col>
+        </el-row>
       </el-row>
       <el-dialog
         title="签名"

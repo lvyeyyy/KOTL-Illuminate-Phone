@@ -91,6 +91,7 @@
         :signpicture="signpicture"
         :signpictureid="signpictureid"
         :edit-success-call-back="editSuccessCallBack"
+        :close-dialog-call-back="closeDialogCallBack"
       />
     </el-dialog>
   </div>
@@ -115,7 +116,11 @@ export default {
     operdm: { type: String, require: true, default: '' },
     username: { type: String, require: true, default: '' },
     signpicture: { type: String, default: '' },
-    signpictureid: { type: String, default: '' }
+    signpictureid: { type: String, default: '' },
+    closeDialogCallBack: {
+      type: Function, default: function (response) {
+      }
+    }
   },
   data() {
     return {

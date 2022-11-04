@@ -143,21 +143,21 @@
               >
                 <el-button
                   size="mini"
-                  type="success"
-                  plain
-                  style="width:100%;height:34px;font-size:14px;"
-                  @click="clickAuditEntrustButtonHandler"
-                >通过审核
-                </el-button>
-              </el-col>
-              <el-col :span="11">
-                <el-button
-                  size="mini"
                   type="danger"
                   plain
                   style="width:100%;height:34px;font-size:14px"
                   @click="clickFailedAuditEntrustButtonHandler"
                 >不通过审核
+                </el-button>
+              </el-col>
+              <el-col :span="11">
+                <el-button
+                  size="mini"
+                  type="success"
+                  plain
+                  style="width:100%;height:34px;font-size:14px;"
+                  @click="clickAuditEntrustButtonHandler"
+                >通过审核
                 </el-button>
               </el-col>
             </el-row>
@@ -191,7 +191,7 @@
 <script>
 function clientGetToken() {
   return client.getToken()
-  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiY2RjODA2MDAtNDg5Ny00OTVlLWFlMmEtZmViY2RlMWNiMDc5IiwiaWF0IjoiMjAyMi8xMC8yOCAxMDowNjozNSIsIm5hbWVpZCI6Ijc3NiIsIm5iZiI6MTY2NjkyMjc5NSwiZXhwIjoxNjY2OTI0NTk1LCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.HobGnk2Bfh4gcpZdKfys-n2ZT0JQ_6Jpby1BAgRIfFc'
+  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiYmEzMWI3MDktODcyZi00YjBjLWJhYzktNGFlZWJjMWFmZTE5IiwiaWF0IjoiMjAyMi8xMS8zIDE1OjE2OjMzIiwibmFtZWlkIjoiNzc2IiwibmJmIjoxNjY3NDU5NzkzLCJleHAiOjE2Njc0NjE1OTMsImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.pminsd_PaeOu4L7Jjjm5nS1v0og7q1-soL-fs4Las50'
 }
 
 function clientGetOTaskId() {
@@ -283,7 +283,7 @@ export default {
         case this.$store.getters.AUDIT_STEP.SECOND:
           return `复核人 ${this.secondAuditorName}`
         case this.$store.getters.AUDIT_STEP.THIRD:
-          return `授权签字 ${this.thirdAuditorName}`
+          return `授权签字人 ${this.thirdAuditorName}`
         case this.$store.getters.AUDIT_STEP.FORTH:
           return `领导终审 ${this.forthauditor}`
         case this.$store.getters.AUDIT_STEP.THREE:

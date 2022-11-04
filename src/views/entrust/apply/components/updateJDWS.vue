@@ -7,7 +7,7 @@
       :effect="changeTagEffect(index)"
       @click="tagClick(index)"
     >{{ (index+1)+'.'+pdf.name }}</el-tag>
-    <el-row style="height:calc(100vh - 130px);overflow-y:scroll">
+    <el-row style="height:calc(100vh - 155px);overflow-y:scroll">
       <!-- <div id="pdfdemo" /> -->
       <Pdf
         v-for="i in numPages"

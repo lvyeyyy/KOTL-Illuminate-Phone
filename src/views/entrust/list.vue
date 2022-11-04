@@ -2,11 +2,11 @@
   <div style="height:100%">
     <el-row
       :gutter="20"
-      style="width:100%"
+      style="width:100%;margin-left:0;margin-right:0"
     >
       <el-col
         :span="24"
-        style="padding:0;margin-bottom:5px"
+        style="padding:0;"
       >
         <el-card class="topCard">
           <el-form
@@ -15,7 +15,10 @@
             label-width="125px"
           >
             <el-row :gutter="20">
-              <el-col :span="24">
+              <el-col
+                :span="24"
+                style="border-bottom:1px solid #e3dada"
+              >
                 <el-form-item
                   class="borderStyle"
                   label="受理编号"
@@ -30,8 +33,12 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-divider />
-              <el-col :span="19">
+              <!-- <el-divider /> -->
+              <!-- <el-row style="border-bottom:1px solid #e3dada;padding-left: 10px;"> -->
+              <el-col
+                :span="19"
+                style="border-bottom:1px solid #e3dada;"
+              >
                 <el-form-item
                   class="borderStyle"
                   label="委托时间"
@@ -47,24 +54,26 @@
                     end-placeholder="结束日期"
                     align="center"
                     size="mini"
-                    style="width: 107%"
+                    style="width: 100%"
                     @focus="elDatePickerOnFocus"
                   />
                 </el-form-item>
               </el-col>
               <el-col
                 :span="5"
-                style="margin-top:3%"
+                style="margin-top:1.5%"
               >
                 <el-button
                   plain
                   size="mini"
                   type="primary"
+                  style="width:100%"
                   @click="query"
                 >查询
                 </el-button>
               </el-col>
-              <el-divider />
+              <!-- </el-row> -->
+              <!-- <el-divider /> -->
             </el-row>
           </el-form>
         </el-card>
@@ -72,7 +81,7 @@
     </el-row>
     <el-row
       :gutter="20"
-      style="margin:110px 0 0 0;height:calc(100% - 115px)"
+      :style="innerStyle"
     >
       <el-card class="my-card">
         <el-table
@@ -165,6 +174,7 @@
         :username="username"
         :signpicture="signpicture"
         :signpictureid="signpictureid"
+        :close-dialog-call-back="closeDialogCallBack"
       />
     </el-dialog>
   </div>
@@ -172,28 +182,28 @@
 
 <script>
 function clientGetToken() {
-  return client.getToken()
-  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiOTE5Y2MzMjYtM2FmYy00ZDJkLTkyZjUtYWY2OTVlM2VjMDlhIiwiaWF0IjoiMjAyMi8xMS8xIDg6MzY6NDIiLCJuYW1laWQiOiI3NzYiLCJuYmYiOjE2NjcyNjMwMDIsImV4cCI6MTY2NzI2NDgwMiwiaXNzIjoiand0X3VzZXIiLCJhdWQiOiJqd3RfYXVkaWVuY2UifQ.m2BcylQNtPLZ9C7x10rTMjnaOgAxc7j-r29y0zQBAWM'
+  // return client.getToken()
+  return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiODYyZjVlZGItY2RmMC00ODc1LTk0ZGYtNjgzMDA2NDc0ODc3IiwiaWF0IjoiMjAyMi8xMS80IDE0OjExOjEwIiwibmFtZWlkIjoiNzc2IiwibmJmIjoxNjY3NTQyMjcwLCJleHAiOjE2Njc1NDQwNzAsImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.3mTHeIJgYy0Mm0rDgDj4iqtrm6LiLV2N0U20E9aW0tA'
 }
 function clientGetOperdm() {
-  return client.getOperdm()
-  // return '776'
+  // return client.getOperdm()
+  return '776'
 }
 function clientGetUsername() {
-  return client.getRealname()
-  // return '王敏'
+  // return client.getRealname()
+  return '王敏'
 }
 function clientGetSignpicture() {
-  return client.getSignature()
-  // return 'http://192.168.0.88:8040//LHS/UserSign/2022/10/27/6826e2302240c858c78d72c9b44f939e.PNG'
+  // return client.getSignature()
+  return 'http://192.168.0.88:8040//LHS/UserSign/2022/10/27/6826e2302240c858c78d72c9b44f939e.PNG'
 }
 function clientGetSignpictureid() {
-  return client.getSignatureid()
-  // return '26387'
+  // return client.getSignatureid()
+  return '26387'
 }
 function clientGetSqdwid() {
-  return client.getXzdid()
-  // return '6'
+  // return client.getXzdid()
+  return '6'
 }
 
 import { datePeriodPickerOptions } from '@/utils/tool'
@@ -294,7 +304,20 @@ export default {
       username: '',
       signpicture: '',
       signpictureid: '',
-      sqdwid: ''
+      sqdwid: '',
+      offsetHeight: 0
+    }
+  },
+  //
+  computed: {
+    innerStyle: function () {
+      return {
+        'margin-top': this.offsetHeight + 'px',
+        'margin-left': 0,
+        'margin-right': 0,
+        'padding-top': '5px',
+        height: `calc(100% - ${this.offsetHeight}px)`
+      }
     }
   },
   created() {
@@ -308,6 +331,9 @@ export default {
     this.signpictureid = clientGetSignpictureid()
     this.sqdwid = clientGetSqdwid()
     this.getEntrustList()
+  },
+  mounted() {
+    this.offsetHeight = document.getElementsByClassName('topCard')[0].offsetHeight
   },
   methods: {
     // 补发
@@ -327,6 +353,9 @@ export default {
     // 点击选择日期不调用输入法
     elDatePickerOnFocus() {
       document.activeElement.blur()
+    },
+    closeDialogCallBack() {
+      this.dialogPrintVisible = false
     },
     // 获取委托表格数据
     getEntrustList() {
@@ -432,6 +461,7 @@ export default {
 ::v-deep .topCard {
   position: fixed;
   z-index: 1;
+  width: 100%;
 }
 ::v-deep .my-card .el-card__body {
   padding-top: 0;
@@ -460,7 +490,7 @@ export default {
   // padding: 1% 0 0 1%;
 }
 ::v-deep .el-divider--horizontal {
-  margin: 12% 0 0 4%;
+  margin: 10% 0 0 4%;
   background-color: #eee;
   width: 93%;
 }

@@ -77,16 +77,16 @@
 
 <script>
 function clientGetToken() {
-  //   return client.getToken()
-  return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdnllIiwianRpIjoiMWJiNWUxYTAtYjNmNC00YTkxLWE3NDQtZTgwMjI5MmI4ZGY0IiwiaWF0IjoiMjAyMi8xMC8yNiAxMTo0NDo0MiIsIm5hbWVpZCI6IjczOCIsIm5iZiI6MTY2Njc1NTg4MiwiZXhwIjoxNjY2NzU3NjgyLCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.XZKayBYxU24URTTGZ3dFyiw6HlQSSsZGfZoKFh_AbMU'
+  return client.getToken()
+  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsdnllIiwianRpIjoiMWJiNWUxYTAtYjNmNC00YTkxLWE3NDQtZTgwMjI5MmI4ZGY0IiwiaWF0IjoiMjAyMi8xMC8yNiAxMTo0NDo0MiIsIm5hbWVpZCI6IjczOCIsIm5iZiI6MTY2Njc1NTg4MiwiZXhwIjoxNjY2NzU3NjgyLCJpc3MiOiJqd3RfdXNlciIsImF1ZCI6Imp3dF9hdWRpZW5jZSJ9.XZKayBYxU24URTTGZ3dFyiw6HlQSSsZGfZoKFh_AbMU'
 }
 function clientGetCaseId() {
-  // return client.getAjid()
-  return '3295'
+  return client.getAjid()
+  // return '3295'
 }
 function clientGetWtId() {
-  // return client.getWtid()
-  return '3337'
+  return client.getWtid()
+  // return '3337'
 }
 import CaseInfo from '../entrust/caseInfo.vue'
 import WtInfo from '../preAudit/entrustInfo.vue'
