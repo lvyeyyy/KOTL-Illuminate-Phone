@@ -1,38 +1,5 @@
 <template>
   <div style="height:100%">
-    <!-- <el-row class="fixRow">
-      <el-col
-        :span="24"
-        style="height:100%"
-      >
-        <el-card
-          shadow="always"
-          class="my-card"
-          style="height:100%"
-        >
-          <el-col
-            :span="8"
-            style="height:100%;text-align:left"
-          >
-            <el-button
-              type="text"
-              icon="el-icon-arrow-left"
-              @click="backList"
-            >上一步</el-button>
-          </el-col>
-          <el-col :span="8">确认委托信息</el-col>
-          <el-col
-            :span="8"
-            style="height:100%;text-align:right"
-          >
-            <el-button
-              type="text"
-              @click="goClick"
-            >下一步<i class="el-icon-arrow-right" /></el-button>
-          </el-col>
-        </el-card>
-      </el-col>
-    </el-row> -->
     <el-form
       ref="entrustForm"
       class="my-form"
@@ -456,19 +423,6 @@
 </template>
 
 <script>
-// function clientGetToken() {
-//   //   return client.getToken()
-//   return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiNGY4ZWU2YjktZDllZi00NzcwLTk1OWMtYjdkOGQyNjM3YTdmIiwiaWF0IjoiMjAyMi8xMC8xMiA4OjQ0OjQxIiwibmFtZWlkIjoiNzc2IiwibmJmIjoxNjY1NTM1NDgxLCJleHAiOjE2NjU1MzcyODEsImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.C-vJa4lWaxY5RLm_U1_g4q5LDfkEZKCCo9utgLugLSw'
-// }
-// function clientGetCaseId() {
-//   // return client.getCaseid()
-//   return '3284'
-// }
-// function clientGetWtId() {
-//   // return client.getWtid()
-//   return '3304'
-// }
-
 import { hasRoles, disabledDate } from '@/utils/tool'
 import { getAllUnitSelectOption, getgroupuserbyzydw, getduty, getcardtype, getAllIdentificationTypeSelectOption, getAllJdLbByJdZy, getAllJdZLb, getIdentificationRequirementsList, getJdYq } from '@/api/selectOption'
 import { getEntrustInfoByEntrustID, updateEntrust } from '@/api/entrust'
@@ -613,9 +567,6 @@ export default {
     }
   },
   created() {
-    // this.tokentest = clientGetToken()
-    // var tokentest = this.tokentest
-    // this.$store.commit('user/SET_TOKEN2', tokentest)
     this.entrustForm.AJID = this.caseId
     // this.entrustId = this.$route.query.entrustId
     this.entrustForm.JDDW = 5
@@ -644,8 +595,6 @@ export default {
         this.$nextTick(_ => {
           this.jdyqFlag = false
           this.entrustForm.JDLB = entrustInfo.jdlb
-          // this.getAllIdentificationSubCategoryList(_ => {
-          // })
           this.$nextTick(_ => {
             this.entrustForm.JDPROJECT = entrustInfo.identification
             this.$nextTick(_ => {
@@ -798,12 +747,6 @@ export default {
         })
       })
     }
-    // backList() {
-    //   this.$router.go(-1)
-    // },
-    // goClick() {
-    //   this.$router.push({ path: '/preaudit/bdjrinfo', query: { entrustId: this.$route.query.entrustId } })
-    // }
   }
 }
 </script>
@@ -832,19 +775,6 @@ export default {
 }
 ::v-deep .el-card__body {
   padding: 10px;
-}
-.fixRow {
-  position: fixed;
-  width: 100%;
-  top: 0;
-  text-align: center;
-  z-index: 99;
-}
-/* ::v-deep .el-form {
-  margin-top: 40px;
-} */
-::v-deep .el-divider--horizontal {
-  margin: 10px 0;
 }
 ::v-deep .my-card .el-card__body {
   height: 100%;

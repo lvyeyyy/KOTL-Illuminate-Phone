@@ -1,31 +1,5 @@
 <template>
   <div>
-    <!-- <el-row class="fixRow">
-      <el-col
-        :span="24"
-        style="height:100%"
-      >
-        <el-card
-          shadow="always"
-          class="my-card"
-          style="height:100%;text-align:left"
-        >
-          <el-col
-            :span="14"
-            style="text-align:right"
-          >案件信息</el-col>
-          <el-col
-            :span="10"
-            style="height:100%;text-align:right"
-          >
-            <el-button
-              type="text"
-              @click="goClcik"
-            >下一步<i class="el-icon-arrow-right" /></el-button>
-          </el-col>
-        </el-card>
-      </el-col>
-    </el-row> -->
     <el-row style="margin-top:50px;padding-left:30px">
       <el-row class="rowStyle">
         <el-col
@@ -122,19 +96,6 @@
 </template>
 
 <script>
-// function clientGetToken() {
-//   //   return client.getToken()
-//   return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiNzI2NTE0ZGUtMGU2ZC00MjQzLWI0ODItNTJlMjg2NjQzZDZmIiwiaWF0IjoiMjAyMi8xMC8yNCA5OjA4OjQwIiwibmFtZWlkIjoiNzc2IiwibmJmIjoxNjY2NTczNzIwLCJleHAiOjE2NjY1NzU1MjAsImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.ZO0hC5Llv3U-ZwiFeauW5NiZMxl3lJG2P6ZMX8Op9NE'
-// }
-// function clientGetCaseId() {
-//   // return client.getAjid()
-//   return '3295'
-// }
-// function clientGetWtId() {
-//   // return client.getWtid()
-//   return '3337'
-// }
-
 import { getCaseInfoByCaseID } from '@/api/case'
 
 export default {
@@ -172,11 +133,6 @@ export default {
     }
   },
   created() {
-    // this.tokentest = clientGetToken()
-    // var tokentest = this.tokentest
-    // this.$store.commit('user/SET_TOKEN2', tokentest)
-    // this.caseId = clientGetCaseId()
-    // this.entrustId = clientGetWtId()
     this.getCaseInfo()
   },
   methods: {
@@ -219,18 +175,8 @@ export default {
 ::v-deep .el-card__body {
   padding: 10px;
 }
-.fixRow {
-  position: fixed;
-  width: 100%;
-  top: 0;
-  text-align: center;
-  z-index: 99;
-}
 ::v-deep .el-row {
   width: 100%;
-}
-::v-deep .el-divider--horizontal {
-  margin: 10px 0;
 }
 ::v-deep .my-card .el-card__body {
   height: 100%;

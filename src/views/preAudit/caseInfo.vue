@@ -1,31 +1,5 @@
 <template>
   <div style="height:100%">
-    <!-- <el-row class="fixRow">
-      <el-col
-        :span="24"
-        style="height:100%"
-      >
-        <el-card
-          shadow="always"
-          class="my-card"
-          style="height:100%;text-align:left"
-        >
-          <el-col
-            :span="15"
-            style="text-align:right"
-          >确认案件信息</el-col>
-          <el-col
-            :span="9"
-            style="height:100%;text-align:right"
-          >
-            <el-button
-              type="text"
-              @click="goClick"
-            >下一步<i class="el-icon-arrow-right" /></el-button>
-          </el-col>
-        </el-card>
-      </el-col>
-    </el-row> -->
     <el-form
       ref="caseForm"
       class="my-form"
@@ -66,17 +40,6 @@
             />
           </el-form-item>
         </el-col>
-        <!-- <el-col
-          v-if="jdzy === $store.getters.MAJOR_TYPE.DNA"
-          :span="5"
-          style="margin-left:5px;margin-top:3px"
-        >
-          <el-button
-            type="primary"
-            plain
-            @click="read"
-          >读取</el-button>
-        </el-col> -->
         <el-col :span="23">
           <el-form-item
             label="案件名称"
@@ -200,27 +163,10 @@
 </template>
 
 <script>
-// function clientGetToken() {
-//   return client.getToken()
-//   // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiOTVhNDJmMDItMzRiMi00MTk5LWIyOGYtODFkODUyNjg2NWQxIiwiaWF0IjoiMjAyMi8xMC8xNyA5OjAyOjA5IiwibmFtZWlkIjoiNzc2IiwibmJmIjoxNjY1OTY4NTI5LCJleHAiOjE2NjU5NzAzMjksImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.yIWmnuZdvm0BMoCSxhKJdu1gr1HS6cMIv-mwtwqr82M'
-// }
-// function clientGetCaseId() {
-//   // return client.getAjid()
-//   return '3295'
-// }
-// function clientGetOTaskId() {
-//   // return client.getWtid()
-//   return '3337'
-// }
-// // 再传个鉴定专业
-// function clientGetOjdzy() {
-//   // return client.getJdzy()
-//   return '2'
-// }
 import moment from 'moment'
 import { disabledDate } from '@/utils/tool'
 import { getAllCaseNatureSelectOption, getAllCaseTypeSelectOption } from '@/api/selectOption'
-import { getCaseInfoByCaseID, updateCase, ajxxreadxcserver } from '@/api/case'
+import { getCaseInfoByCaseID, updateCase } from '@/api/case'
 export default {
   props: {
     // jdzy: { type: String, default: '' },
@@ -300,12 +246,6 @@ export default {
     }
   },
   created() {
-    // this.tokentest = clientGetToken()
-    // var tokentest = this.tokentest
-    // this.$store.commit('user/SET_TOKEN2', tokentest)
-    // this.caseId = clientGetCaseId()
-    // this.entrustId = clientGetOTaskId()
-    // this.jdzy = clientGetOjdzy()
     this.getAllCaseNatureList()
     this.getAllCaseTypeList()
     this.getCaseInfo()
@@ -362,44 +302,6 @@ export default {
     },
     getCaseAccount() {
       this.caseForm.AJACCOUNT = moment(this.caseForm.CASE_DATE).format('YYYY年M月D日') + '在' + this.caseForm.ADDRESS
-    },
-    // backList() {
-    //   this.$router.push('/audit/list')
-    // },
-    // goClick() {
-    //   this.$router.push({ path: '/preaudit/wtinfo', query: { caseId: this.caseId, entrustId: this.entrustId } })
-    //   // this.$router.push('/preaudit/wtinfo')
-    // },
-    // 读取
-    read() {
-      if (!this.caseForm.kindID) {
-        this.$message({
-          message: '请输入现场勘验编号',
-          type: 'warning'
-        })
-      } else {
-        const obj = {
-          mType: '0',
-          kindId: this.caseForm.kindID,
-          wtTd: ''
-        }
-        ajxxreadxcserver(obj).then(res => {
-          if (res.success) {
-            // 案件名称
-            this.caseForm.AJNAME = res.data[0].ajname
-            // 打防管控编号
-            this.caseForm.DFGKBH = res.data[0].dfgkbh
-            // 案发日期
-            this.caseForm.CASE_DATE = res.data[0].case_date
-            // 案发地址
-            this.caseForm.ADDRESS = res.data[0].address
-            // 简要案情
-            this.caseForm.AJACCOUNT = res.data[0].ajaccount
-          } else {
-            this.$message.error(res.msg)
-          }
-        })
-      }
     }
   }
 }
@@ -423,13 +325,6 @@ export default {
 ::v-deep .el-card__body {
   padding: 10px;
 }
-.fixRow {
-  position: fixed;
-  width: 100%;
-  top: 0;
-  text-align: center;
-  z-index: 99;
-}
 .my-form {
   height: 100%;
   overflow-y: scroll;
@@ -447,9 +342,6 @@ export default {
 }
 ::v-deep .el-row {
   width: 100%;
-}
-::v-deep .el-divider--horizontal {
-  margin: 10px 0;
 }
 ::v-deep .my-card .el-card__body {
   height: 100%;

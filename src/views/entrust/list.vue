@@ -33,8 +33,6 @@
                   />
                 </el-form-item>
               </el-col>
-              <!-- <el-divider /> -->
-              <!-- <el-row style="border-bottom:1px solid #e3dada;padding-left: 10px;"> -->
               <el-col
                 :span="19"
                 style="border-bottom:1px solid #e3dada;"
@@ -72,8 +70,6 @@
                 >查询
                 </el-button>
               </el-col>
-              <!-- </el-row> -->
-              <!-- <el-divider /> -->
             </el-row>
           </el-form>
         </el-card>
@@ -182,28 +178,28 @@
 
 <script>
 function clientGetToken() {
-  // return client.getToken()
-  return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiODYyZjVlZGItY2RmMC00ODc1LTk0ZGYtNjgzMDA2NDc0ODc3IiwiaWF0IjoiMjAyMi8xMS80IDE0OjExOjEwIiwibmFtZWlkIjoiNzc2IiwibmJmIjoxNjY3NTQyMjcwLCJleHAiOjE2Njc1NDQwNzAsImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.3mTHeIJgYy0Mm0rDgDj4iqtrm6LiLV2N0U20E9aW0tA'
+  return client.getToken()
+  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiODYyZjVlZGItY2RmMC00ODc1LTk0ZGYtNjgzMDA2NDc0ODc3IiwiaWF0IjoiMjAyMi8xMS80IDE0OjExOjEwIiwibmFtZWlkIjoiNzc2IiwibmJmIjoxNjY3NTQyMjcwLCJleHAiOjE2Njc1NDQwNzAsImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.3mTHeIJgYy0Mm0rDgDj4iqtrm6LiLV2N0U20E9aW0tA'
 }
 function clientGetOperdm() {
-  // return client.getOperdm()
-  return '776'
+  return client.getOperdm()
+  // return '776'
 }
 function clientGetUsername() {
-  // return client.getRealname()
-  return '王敏'
+  return client.getRealname()
+  // return '王敏'
 }
 function clientGetSignpicture() {
-  // return client.getSignature()
-  return 'http://192.168.0.88:8040//LHS/UserSign/2022/10/27/6826e2302240c858c78d72c9b44f939e.PNG'
+  return client.getSignature()
+  // return 'http://192.168.0.88:8040//LHS/UserSign/2022/10/27/6826e2302240c858c78d72c9b44f939e.PNG'
 }
 function clientGetSignpictureid() {
-  // return client.getSignatureid()
-  return '26387'
+  return client.getSignatureid()
+  // return '26387'
 }
 function clientGetSqdwid() {
-  // return client.getXzdid()
-  return '6'
+  return client.getXzdid()
+  // return '6'
 }
 
 import { datePeriodPickerOptions } from '@/utils/tool'
@@ -338,8 +334,6 @@ export default {
   methods: {
     // 补发
     reissue: function (row) {
-      // this.row = row
-      // this.dialogReissueVisible = true
       if (row.wt_operdm_one === this.operdm || row.wt_operdm_two === this.operdm) {
         this.row = row
         this.dialogReissueVisible = true
@@ -361,7 +355,6 @@ export default {
     getEntrustList() {
       this.tableLoading = true
       getEntrustList(this.queryEntrustForm).then(response => {
-        // console.log('11', response.data)
         this.entrustTableData = this.entrustTableData.concat(response.data.rows)
         this.totalPage = Math.ceil(response.data.total / 10)
         this.tableLoading = false
@@ -442,13 +435,6 @@ export default {
 ::v-deep .el-table td {
   padding: 15px 0;
 }
-// .auditBtn {
-//   margin-left: 36%;
-//   padding: 5px 8px;
-//   font-size: 14px;
-//   width: 62%;
-//   text-align: center;
-// }
 ::v-deep .el-table__body-wrapper::-webkit-scrollbar {
   width: 0 !important;
 }
@@ -487,19 +473,7 @@ export default {
 }
 ::v-deep .el-form-item {
   margin-bottom: 0;
-  // padding: 1% 0 0 1%;
 }
-::v-deep .el-divider--horizontal {
-  margin: 10% 0 0 4%;
-  background-color: #eee;
-  width: 93%;
-}
-// .rightInfo {
-//   font-size: 12.5px;
-//   color: #85aaf1;
-//   width: 126%;
-//   text-align: center;
-// }
 ::v-deep .el-dialog__title {
   font-size: 16px;
 }
@@ -513,7 +487,6 @@ export default {
   position: relative;
 }
 ::v-deep .el-dialog__headerbtn {
-  // top: 1%;
   margin-top: -3%;
   font-size: 23px;
   position: absolute;

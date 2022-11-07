@@ -196,11 +196,6 @@
 </template>
 
 <script>
-// function clientGetToken() {
-//   //   return client.getToken()
-//   return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiOGExN2NkMGMtYWNmOC00NmNlLThlMmEtOWMxYmMxY2QyMzFjIiwiaWF0IjoiMjAyMi8xMC8xMSA4OjQwOjExIiwibmFtZWlkIjoiNzc2IiwibmJmIjoxNjY1NDQ4ODExLCJleHAiOjE2NjU0NTA2MTEsImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.PtD34pabAnmUDbMXhSpuY9FrqwqJ8Ws_F23P7JappZA'
-// }
-
 import { getBjdrInfoByID, addAppraisedPeople, updateAppraisedPeople, deleteAppraisedPeople } from '@/api/entrust'
 import { getSexByIdCode, getBirthdayByIdCode } from '@/utils/tool'
 import { validateIdCard } from '@/utils/validate'
@@ -293,9 +288,6 @@ export default {
     }
   },
   created() {
-    // this.tokentest = clientGetToken()
-    // var tokentest = this.tokentest
-    // this.$store.commit('user/SET_TOKEN2', tokentest)
     this.onload()
   },
   methods: {
