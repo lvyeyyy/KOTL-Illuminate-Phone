@@ -58,14 +58,14 @@ service.interceptors.response.use(
       // 40001: Illegal token 非法令牌; 50012: Other clients logged in 其他用户登录; 43104: Token expired 令牌过期;
       if (res.code === 40001 || res.code === 50012 || res.code === 43104) {
         // to re-login
-        MessageBox.confirm((res.msg || '未知错误') + ' ' + (res.code || '') + '您已退出，你可以关闭并留在此页面，或者重新登录。', '确认注销', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '关闭',
-          type: 'warning'
+        MessageBox.alert((res.msg || '未知错误') + ' ' + (res.code || ''), '确认注销', {
+          confirmButtonText: '重新登录'
         }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
+          // 调用方法回到APP的首页
+          client.reLogin()
+          // store.dispatch('user/resetToken').then(() => {
+          //   location.reload()
+          // })
         })
       } else if (res.code === 40010 || res.code === 40005) {
         Message({

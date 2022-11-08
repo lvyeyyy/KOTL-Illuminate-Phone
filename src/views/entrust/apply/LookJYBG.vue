@@ -59,8 +59,9 @@
     </el-row>
     <el-dialog
       title="签名"
+      class="signClassStyle"
       :visible.sync="dialogSignatureVisible"
-      width="100%"
+      fullscreen
       :close-on-click-modal="false"
       append-to-body
       destroy-on-close
@@ -69,6 +70,7 @@
         v-if="dialogSignatureVisible"
         :jdzy-id="jdzyId"
         :signpicture="signpicture"
+        :close-success-callback="closeSuccessCallback"
         @on-save="uploadEntrustSignatureImage"
         @on-picture="uploadPicture"
       />
@@ -133,7 +135,6 @@ export default {
     }
   },
   created() {
-    // this.queryDocument()
     this.getdocumentbywslb()
   },
   methods: {
@@ -160,6 +161,7 @@ export default {
             }
           }
           this.pdfList = (temp[index].url + '#toolbar=0')
+          // 获取pdf总页数
           const src = Pdf.createLoadingTask(this.pdfList)
           src.promise.then(pdf => {
             this.numPages = pdf.numPages
@@ -177,41 +179,6 @@ export default {
         }
       })
     },
-    // 查询检验报告
-    // queryDocument() {
-    //   this.isShow = true
-    //   queryDocument(this.entrustId, this.$store.getters.DOCUMENT_STEP.AUDIT).then(response => {
-    //     let temp = []
-    //     this.pdfList = []
-    //     if (response.data.length !== 0) {
-    //       temp = response.data
-    //       let edit_num = 0
-    //       let index = 0
-    //       for (let i = 0; i < temp.length; i++) {
-    //         if (temp[i].type === '鉴定文书') {
-    //           if (temp[i].editioN_NUM === 0) {
-    //             index = i
-    //             edit_num = temp[i].editioN_NUM
-    //           } else {
-    //             if (temp[i].editioN_NUM > edit_num) {
-    //               index = i
-    //             }
-    //           }
-    //         }
-    //         this.pdfList = (temp[index].url + '#toolbar=0')
-    //         this.isShow = false
-    //       }
-    //       this.$nextTick(() => {
-    //         //  实例化
-    //         this.pdfh5 = new Pdfh5('#pdfdemo', {
-    //           zoomEnable: true,
-    //           tapZoomFactor: 1.5,
-    //           pdfurl: this.pdfList// 这里就是pdf的路径
-    //         })
-    //       })
-    //     }
-    //   })
-    // },
     receive() {
       this.dialogSignatureVisible = true
     },
@@ -253,6 +220,9 @@ export default {
     },
     editSuccessCallBack() {
       this.dialogEditJDWSVisible = false
+    },
+    closeSuccessCallback() {
+      this.dialogSignatureVisible = false
     }
   }
 }
@@ -268,9 +238,15 @@ export default {
 ::v-deep .el-dialog__body {
   padding: 0 10px 15px 10px;
 }
+::v-deep .is-fullscreen .el-dialog__body {
+  padding: 15px 10px 0px 10px;
+}
 ::v-deep .el-dialog__headerbtn {
   font-size: 22px;
   top: 2%;
+}
+::v-deep .is-fullscreen .el-dialog__header {
+  display: none !important;
 }
 ::v-deep .el-dialog__header {
   padding: 10px 20px 10px;

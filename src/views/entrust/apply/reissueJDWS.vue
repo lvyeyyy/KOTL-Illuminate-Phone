@@ -376,7 +376,7 @@
         title="签名"
         :visible.sync="dialogSignatureVisible"
         :close-on-click-modal="false"
-        width="100%"
+        fullscreen
         append-to-body
         destroy-on-close
         @opened="isShowEntrustSignature=true"
@@ -386,6 +386,7 @@
           v-if="dialogSignatureVisible"
           :jdzy-id="row.jdzy"
           :signpicture="signpicture"
+          :close-success-callback="closeSuccessCallback"
           @on-save="uploadSignatureImage"
           @on-picture="uploadPicture()"
         />
@@ -743,6 +744,9 @@ export default {
       getAllUnitSelectOption().then(response => {
         this.entrustWorkUnitOption = response.data
       })
+    },
+    closeSuccessCallback() {
+      this.dialogSignatureVisible = false
     }
   }
 }
@@ -803,5 +807,12 @@ export default {
 ::v-deep .el-divider {
   height: 1.5px;
   margin: 5px 0px 8px;
+}
+::v-deep .el-dialog__header {
+  display: none !important;
+  padding: 10px 20px 10px;
+}
+::v-deep .el-dialog__body {
+  padding: 15px 10px 0px 10px;
 }
 </style>

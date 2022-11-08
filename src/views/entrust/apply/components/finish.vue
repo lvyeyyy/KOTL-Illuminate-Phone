@@ -109,7 +109,7 @@
     <el-dialog
       title="签名"
       :visible.sync="dialogSignatureVisible"
-      width="100%"
+      fullscreen
       :close-on-click-modal="false"
       append-to-body
       destroy-on-close
@@ -120,6 +120,7 @@
         v-if="dialogSignatureVisible"
         :jdzy-id="row.jdzy"
         :signpicture="signpicture"
+        :close-success-callback="closeSuccessCallback"
         @on-save="uploadSignatureImage"
         @on-picture="uploadPicture()"
       />
@@ -235,6 +236,9 @@ export default {
       } else {
         this.$message.info('请签字！')
       }
+    },
+    closeSuccessCallback() {
+      this.dialogSignatureVisible = false
     }
   }
 }
@@ -246,13 +250,13 @@ export default {
   margin-bottom: 3px;
 }
 ::v-deep .el-dialog__body {
-  padding: 0 10px 15px 10px;
+  padding: 15px 10px 0px 10px;
 }
 ::v-deep .el-dialog__title {
   font-size: 16px;
 }
 ::v-deep .el-dialog__header {
-  padding: 10px 20px 10px;
+  display: none !important;
 }
 ::v-deep .el-dialog__headerbtn {
   top: 2%;

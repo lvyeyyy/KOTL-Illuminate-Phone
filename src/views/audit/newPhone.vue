@@ -169,7 +169,7 @@
       class="signatureClass"
       title="签名"
       :visible.sync="dialogSignatureVisible"
-      width="100%"
+      fullscreen
       append-to-body
       destroy-on-close
       :lock-scroll="false"
@@ -181,6 +181,7 @@
         :is-four-auditor="isFourAuditor"
         :jdzy-id="jdzyId"
         :signpicture="signpicture"
+        :close-success-callback="closeSuccessCallback"
         @on-save="uploadImage"
         @on-picture="uploadPicture"
       />
@@ -191,7 +192,7 @@
 <script>
 function clientGetToken() {
   return client.getToken()
-  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiYmEzMWI3MDktODcyZi00YjBjLWJhYzktNGFlZWJjMWFmZTE5IiwiaWF0IjoiMjAyMi8xMS8zIDE1OjE2OjMzIiwibmFtZWlkIjoiNzc2IiwibmJmIjoxNjY3NDU5NzkzLCJleHAiOjE2Njc0NjE1OTMsImlzcyI6Imp3dF91c2VyIiwiYXVkIjoiand0X2F1ZGllbmNlIn0.pminsd_PaeOu4L7Jjjm5nS1v0og7q1-soL-fs4Las50'
+  // return 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5nbWluIiwianRpIjoiNmE2YWM4YzYtMzE5OC00ZmE5LWE2MmItOGNhN2EwMDA4OTY3IiwiaWF0IjoiMjAyMi8xMS83IDk6MzA6MDQiLCJuYW1laWQiOiI3NzYiLCJuYmYiOjE2Njc3ODQ2MDQsImV4cCI6MTY2Nzc4NjQwNCwiaXNzIjoiand0X3VzZXIiLCJhdWQiOiJqd3RfYXVkaWVuY2UifQ.1m7Q-h5EPHMdRW1a3hQ3yFgn40f0CFnnboNCBTd_9y0'
 }
 
 function clientGetOTaskId() {
@@ -448,6 +449,9 @@ export default {
     uploadPicture() {
       this.dialogSignatureVisible = false
       this.auditEntrust(this.$store.getters.AUDIT_STATUS.PENDING, 1)
+    },
+    closeSuccessCallback() {
+      this.dialogSignatureVisible = false
     }
   }
 }
@@ -489,8 +493,11 @@ export default {
   right: 9px;
   font-size: 29px;
 }
+::v-deep .el-dialog__header {
+  display: none;
+}
 ::v-deep .el-dialog__body {
-  padding: 0 10px 10px 10px;
+  padding: 15px 10px 0px 10px;
 }
 ::v-deep .wtshClass .el-card__body {
   padding: 5px;

@@ -1,37 +1,53 @@
 <template>
-  <div>
+  <div style="position:relative">
     <div v-if="!isFourAuditor">
       <el-row :gutter="20">
-        <el-col :span="24">
+        <el-col
+          :span="24"
+          style="text-align:right"
+        >
           <canvas id="canvas" />
         </el-col>
       </el-row>
-      <el-row :gutter="20">
-        <el-col :span="6">
-          <el-button
-            size="mini"
-            type="danger"
-            @click="draw.clear()"
-          >重写
-          </el-button>
-        </el-col>
-        <el-col :span="6">
-          <el-button
-            size="mini"
-            type="primary"
-            @click="save"
-          >保存
-          </el-button>
-        </el-col>
-        <el-col :span="10">
-          <el-button
-            size="mini"
-            type="info"
-            @click="signaturePhoto"
-          >使用签字图片
-          </el-button>
-        </el-col>
-      </el-row>
+      <div
+        :gutter="20"
+        class="btnRow"
+      >
+        <!-- <div> -->
+        <el-button
+          size="mini"
+          type="warning"
+          style="width:100%"
+          @click="closeDialog"
+        >关闭
+        </el-button>
+        <el-button
+          size="mini"
+          type="danger"
+          style="width:100%"
+          @click="draw.clear()"
+        >重写
+        </el-button>
+        <!-- </div> -->
+        <!-- <div> -->
+        <el-button
+          size="mini"
+          type="primary"
+          style="width:100%"
+          @click="save"
+        >保存
+        </el-button>
+        <!-- </div> -->
+        <!-- <div> -->
+        <el-button
+          size="mini"
+          type="info"
+          style="width:100%"
+          @click="signaturePhoto"
+        >使用签字图片
+        </el-button>
+        <!-- </div> -->
+      </div>
     </div>
     <div v-if="isFourAuditor">
       <el-row :gutter="20">
@@ -63,7 +79,11 @@ export default {
   props: {
     jdzyId: { type: String, required: false, default: '2' },
     isFourAuditor: { type: Boolean, default: false },
-    signpicture: { type: String, default: '' }
+    signpicture: { type: String, default: '' },
+    closeSuccessCallback: {
+      type: Function, default: function () {
+      }
+    }
   },
   data() {
     return {
@@ -113,6 +133,7 @@ export default {
           this.$emit('on-save', this.draw.dataURLtoBlob(this.imageUrl))
         })
       } else {
+        this.draw.canvas = this.draw.rotate(-90)
         this.$emit('on-save', this.draw.dataURLtoBlob(this.draw.getPNGImage()))
       }
     },
@@ -163,6 +184,9 @@ export default {
           }
         })
       })
+    },
+    closeDialog() {
+      this.closeSuccessCallback()
     }
   }
 }
@@ -172,8 +196,8 @@ export default {
        lang="scss">
 canvas {
   border: 2px dashed #d3d3d3;
-  width: 100% !important;
-  height: 200px !important;
+  width: 90% !important;
+  height: 95vh !important;
 }
 
 .el-button {
@@ -190,5 +214,12 @@ canvas {
 }
 .el-message-box {
   width: 100%;
+}
+.btnRow {
+  position: absolute;
+  display: flex;
+  transform: rotate(90deg);
+  transform-origin: 4% 50%;
+  bottom: 69%;
 }
 </style>
